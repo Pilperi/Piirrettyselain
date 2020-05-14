@@ -6,14 +6,15 @@ import urllib.request
 import funktiot_kansiofunktiot as kfun
 from class_piirretyt import *
 
-# kone = "olkkari" # oletus
-kone = "murakumo" # oletus
+# Mikä kone kyseessä, missä asiat sijaitsevat?
+kone = kvak.LOKAALI_KONE.lower()
+
 konevaihtoehdot = ["olkkari", "murakumo"]
 for arg in sys.argv:
-	if "--kone=" in arg and arg.split("--kone=")[-1] in konevaihtoehdot:
+	if "--kone=" in arg and arg.split("--kone=")[-1].lower() in konevaihtoehdot:
 		kone = arg.split("--kone=")[-1]
 
-if kone == "murakumo":
+if kone == "murakumo" and kvak.linux_murakumo:
 	KANSIO_AURINKOKALA	= "/mnt/Olkkari/Aurinkokala/Animea/"
 	KANSIO_REDRUM		= "/mnt/Olkkari/redrum/Anime/"
 	KANSIO_MICHIRU		= "/mnt/Olkkari/Michiru/Anime/"

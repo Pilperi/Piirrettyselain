@@ -1,9 +1,14 @@
 '''
-Piirrettyhaun luokat
+Piirrettyhaun luokkamääritelmät
 '''
+
 NULL = {}.get(0)
 
 class Piirretty:
+	'''
+	Piirrossarjojen luokka, sarjoilla tietyt perustiedot,
+	niputetaan saman olion alle ja fiksusti JSON:iksi printtautuvaan muotoon.
+	'''
 	def __init__(self, dikti={}):
 		if not dikti.keys():
 			self.nimi				= ""			# Teoksen nimi
@@ -58,10 +63,13 @@ class Piirretty:
 		return(stringi)
 
 
-
 class Hakuparametrit:
 	'''
-	Luokka hakuparametreille
+	Luokka hakuparametreille, pohjustetaan diktillä.
+	Sisältää myös hakutoiminnallisuudet menetelminä,
+	läh. "ota sisään sarja ja täyttääkö se kriteerit" ja
+	siitä listaversio joka kertoo, millä indekseillä on sarjoja jotka
+	sopivat hakuehtoihin.
 	'''
 	def __init__(self, parametrit={}):
 		self.nimessa	= parametrit.get("nimessa")		# sarjan nimessä (tai aliaksessa) str
