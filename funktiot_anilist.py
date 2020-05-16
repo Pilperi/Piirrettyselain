@@ -118,6 +118,8 @@ def muunna_piirroslistaksi(response):
 					sarjan_tyyppi = ["TV"]
 				if sarjan_tyyppi in ["SPECIAL", "MUSIC"]:
 					sarjan_tyyppi = ["SP"]
+				if sarjan_tyyppi in "MOVIE":
+					sarjan_tyyppi = ["MOV"]
 
 				# Kasataan Piirretty-olion pohjustamiseen sopivan mallinen dikti
 				sarjadikti	=	{

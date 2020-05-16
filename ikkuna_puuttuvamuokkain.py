@@ -29,7 +29,7 @@ class Ui_Puuttuvatsarjat(object):
 
         self.teksti_vanhapolku = QtWidgets.QLineEdit(Puuttuvatsarjat)
         self.teksti_vanhapolku.setGeometry(QtCore.QRect(230, 40, 600, 31))
-        self.teksti_vanhapolku.setFont(font)
+        # self.teksti_vanhapolku.setFont(font)
         self.teksti_vanhapolku.setText("")
         self.teksti_vanhapolku.setReadOnly(True)
         self.teksti_vanhapolku.setObjectName("teksti_vanhapolku")
@@ -43,7 +43,7 @@ class Ui_Puuttuvatsarjat(object):
 
         self.teksti_uusipolku = QtWidgets.QLineEdit(Puuttuvatsarjat)
         self.teksti_uusipolku.setGeometry(QtCore.QRect(230, 120, 600, 31))
-        self.teksti_uusipolku.setFont(font)
+        # self.teksti_uusipolku.setFont(font)
         self.teksti_uusipolku.setText("")
         self.teksti_uusipolku.setObjectName("teksti_uusipolku")
 

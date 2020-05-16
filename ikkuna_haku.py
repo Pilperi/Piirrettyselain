@@ -11,8 +11,8 @@ MITAT = [535, 365] # ikkunan mitat
 class Ui_Etsinikkuna(object):
     def setupUi(self, Etsinikkuna, Isantaikkuna):
     # def setupUi(self, Etsinikkuna):
-        font = QtGui.QFont()
-        font.setPointSize(12)
+        # font = QtGui.QFont()
+        # font.setPointSize(12)
 
         self.isanta = Isantaikkuna
 
@@ -25,7 +25,7 @@ class Ui_Etsinikkuna(object):
         Etsinikkuna.setSizePolicy(sizePolicy)
         Etsinikkuna.setMinimumSize(QtCore.QSize(MITAT[0], MITAT[1]))
         Etsinikkuna.setMaximumSize(QtCore.QSize(MITAT[0], MITAT[1]))
-        Etsinikkuna.setFont(font)
+        # Etsinikkuna.setFont(font)
         Etsinikkuna.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
         Etsinikkuna.setToolTip("")
         Etsinikkuna.setStatusTip("")
@@ -43,7 +43,7 @@ class Ui_Etsinikkuna(object):
         if True:
             self.txt_eikatsonut = QtWidgets.QLabel(self.centralwidget)
             self.txt_eikatsonut.setGeometry(QtCore.QRect(220, 10, 301, 241))
-            self.txt_eikatsonut.setFont(font)
+            # self.txt_eikatsonut.setFont(font)
             self.txt_eikatsonut.setFrameShape(QtWidgets.QFrame.Box)
             self.txt_eikatsonut.setAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignTop)
             self.txt_eikatsonut.setTextInteractionFlags(QtCore.Qt.NoTextInteraction)
@@ -97,7 +97,7 @@ class Ui_Etsinikkuna(object):
         if True:
             self.txt_tyyppi = QtWidgets.QLabel(self.centralwidget)
             self.txt_tyyppi.setGeometry(QtCore.QRect(10, 150, 201, 101))
-            self.txt_tyyppi.setFont(font)
+            # self.txt_tyyppi.setFont(font)
             self.txt_tyyppi.setFrameShape(QtWidgets.QFrame.Box)
             self.txt_tyyppi.setAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignTop)
             self.txt_tyyppi.setTextInteractionFlags(QtCore.Qt.NoTextInteraction)
@@ -105,7 +105,7 @@ class Ui_Etsinikkuna(object):
 
             self.check_TV = QtWidgets.QCheckBox(self.centralwidget)
             self.check_TV.setGeometry(QtCore.QRect(20, 190, 61, 21))
-            self.check_TV.setFont(font)
+            # self.check_TV.setFont(font)
             self.check_TV.setToolTip("")
             self.check_TV.setStatusTip("")
             self.check_TV.setAccessibleName("")
@@ -118,7 +118,7 @@ class Ui_Etsinikkuna(object):
 
             self.check_MOV = QtWidgets.QCheckBox(self.centralwidget)
             self.check_MOV.setGeometry(QtCore.QRect(120, 190, 61, 21))
-            self.check_MOV.setFont(font)
+            # self.check_MOV.setFont(font)
             self.check_MOV.setToolTip("")
             self.check_MOV.setStatusTip("")
             self.check_MOV.setAccessibleName("")
@@ -131,7 +131,7 @@ class Ui_Etsinikkuna(object):
 
             self.check_OVA = QtWidgets.QCheckBox(self.centralwidget)
             self.check_OVA.setGeometry(QtCore.QRect(20, 220, 61, 21))
-            self.check_OVA.setFont(font)
+            # self.check_OVA.setFont(font)
             self.check_OVA.setToolTip("")
             self.check_OVA.setStatusTip("")
             self.check_OVA.setAccessibleName("")
@@ -144,7 +144,7 @@ class Ui_Etsinikkuna(object):
      
             self.check_SP = QtWidgets.QCheckBox(self.centralwidget)
             self.check_SP.setGeometry(QtCore.QRect(120, 220, 61, 21))
-            self.check_SP.setFont(font)
+            # self.check_SP.setFont(font)
             self.check_SP.setToolTip("")
             self.check_SP.setStatusTip("")
             self.check_SP.setAccessibleName("")
@@ -159,7 +159,7 @@ class Ui_Etsinikkuna(object):
         if True:
             self.txt_jaksoja = QtWidgets.QLabel(self.centralwidget)
             self.txt_jaksoja.setGeometry(QtCore.QRect(10, 50, 201, 201))
-            self.txt_jaksoja.setFont(font)
+            # self.txt_jaksoja.setFont(font)
             self.txt_jaksoja.setFrameShape(QtWidgets.QFrame.Box)
             self.txt_jaksoja.setAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignTop)
             self.txt_jaksoja.setTextInteractionFlags(QtCore.Qt.NoTextInteraction)
@@ -168,12 +168,12 @@ class Ui_Etsinikkuna(object):
             # Jaksoja yli n
             self.txt_yli = QtWidgets.QLabel(self.centralwidget)
             self.txt_yli.setGeometry(QtCore.QRect(20, 100, 50, 31))
-            self.txt_yli.setFont(font)
+            # self.txt_yli.setFont(font)
             self.txt_yli.setObjectName("txt_yli")
             self.jaksoja_yli = QtWidgets.QSpinBox(self.centralwidget)
             self.jaksoja_yli.setGeometry(QtCore.QRect(50, 100, 51, 31))
             self.jaksoja_yli.setAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
-            self.jaksoja_yli.setFont(font)
+            # self.jaksoja_yli.setFont(font)
             self.jaksoja_yli.setMinimum(0)
             self.jaksoja_yli.setMaximum(127)
             self.jaksoja_yli.setProperty("value", 0)
@@ -182,12 +182,12 @@ class Ui_Etsinikkuna(object):
             # Jaksoja ali n
             self.txt_ali = QtWidgets.QLabel(self.centralwidget)
             self.txt_ali.setGeometry(QtCore.QRect(110, 100, 50, 31))
-            self.txt_ali.setFont(font)
+            # self.txt_ali.setFont(font)
             self.txt_ali.setObjectName("txt_ali")
             self.jaksoja_ali = QtWidgets.QSpinBox(self.centralwidget)
             self.jaksoja_ali.setGeometry(QtCore.QRect(150, 100, 51, 31))
             self.jaksoja_ali.setAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
-            self.jaksoja_ali.setFont(font)
+            # self.jaksoja_ali.setFont(font)
             self.jaksoja_ali.setMinimum(0)
             self.jaksoja_ali.setMaximum(127)
             self.jaksoja_ali.setProperty("value", 0)
