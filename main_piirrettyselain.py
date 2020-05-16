@@ -1,14 +1,16 @@
 import os
 import subprocess
-import vakiot_piirrettysijainnit as ps
+import funktiot_piirrettyfunktiot as ps
+import vakiot_kansiovakiot as kvak
 import class_piirretyt as cp
 import ikkuna_haku
 import ikkuna_katsoneet
 import ikkuna_puuttuvamuokkain
 import funktiot_kansiofunktiot as kfun
+import funktiot_anilist as anifun
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-KUVAKANSIO = ps.KUVAKANSIO
+KUVAKANSIO = kvak.KUVAKANSIO
 KUVAT = kfun.kansion_sisalto(KUVAKANSIO)[0]
 OLETUSKUVA = os.path.join(KUVAKANSIO, "oletus.png")
 PIIRRETTYDIKTI = ps.PIIRRETTYDIKTI
@@ -33,6 +35,7 @@ MITAT           = (3*MARGINAALIT[0]+LISTAMITAT[0]+KUVAMITAT[0], 3*MARGINAALIT[1]
 
 class Paaikkuna(object):
     def setupUi(self, MainWindow):
+        self.SARJAT = SARJAT
         self.KARTOITIN   = [i for i in range(len(SARJAT))]
 
         # Tarkista puuttuvat sarjat
@@ -40,13 +43,23 @@ class Paaikkuna(object):
         if indeksit:
             Dialog = QtWidgets.QDialog()
             ui = ikkuna_puuttuvamuokkain.Ui_Puuttuvatsarjat()
-            ui.setupUi(Dialog, SARJAT, indeksit, ehdotukset)
+            ui.setupUi(Dialog, self, indeksit, ehdotukset)
             ui.sarjannimet()
             paluuarvo = Dialog.exec()
             if paluuarvo:
                 print("Muuttunut")
+                ps.kirjoita_dikti(PIIRRETTYDIKTI, kvak.TIETOKANTATIEDOSTO) # kirjoita päivitys tiedostoon
             else:
                 print("Peruttu")
+
+        # Katsotaan, onko ihmiset katsonu viime aikoina piirrettyjä.
+        uudetsarjat = anifun.paivita_anilist_tietokannat()
+        if uudetsarjat:
+            muuttunut = anifun.vertaa_katsoneita(uudetsarjat, self.SARJAT)
+            # Jos joku on katsonut sarjan joka on koneen kovalevyllä, päivitetään tämä
+            # tieto sarjan tietoihin
+            if muuttunut:
+                ps.kirjoita_dikti(PIIRRETTYDIKTI, kvak.TIETOKANTATIEDOSTO)
         
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(MITAT[0], MITAT[1])
@@ -107,8 +120,10 @@ class Paaikkuna(object):
 
         MainWindow.setCentralWidget(self.centralwidget)
 
+        self.sarjannimet(self.SARJAT)
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
 
     def etsi_sarjaa(self):
         self.NewWindow = QtWidgets.QMainWindow()
@@ -117,6 +132,7 @@ class Paaikkuna(object):
         # uusiui.setupUi(self.NewWindow)
         self.NewWindow.show()
 
+
     def avaakansio(self):
         valittu = self.sarjalista.currentRow()
         if valittu != -1 and valittu < SARJOJA:
@@ -124,12 +140,14 @@ class Paaikkuna(object):
             print("Valittu sarja: {}\nKansiossa: {}".format(sarja.nimi, sarja.tiedostosijainti))
             subprocess.run(["dolphin", sarja.tiedostosijainti], stdin=None, stdout=None, stderr=None)
 
+
     def avaamal(self):
         valittu = self.sarjalista.currentRow()
         if valittu != -1 and valittu < SARJOJA:
             sarja = SARJAT[self.KARTOITIN[valittu]]
             print(sarja)
             subprocess.run(["firefox", sarja.mal], stdin=None, stdout=None, stderr=None)
+
 
     def sarjannimet(self, lista):
         '''
@@ -141,6 +159,7 @@ class Paaikkuna(object):
             nimet.append(sarja.nimi)
         self.sarjalista.addItems(nimet)
         self.sarjalista.show()
+
 
     def nayta_tiedot(self):
         valittu = self.sarjalista.currentRow()
@@ -166,6 +185,7 @@ class Paaikkuna(object):
         	# tyhjä sarja
         	self.tietotaulukko(cp.Piirretty())
         	self.kuva.setIcon(QtGui.QIcon(OLETUSKUVA))
+
 
     def tietotaulukko(self, sarja):
         self.taulukko.setItem(0, 0, QtWidgets.QTableWidgetItem(sarja.nimi))
@@ -195,6 +215,7 @@ class Paaikkuna(object):
         for a,katsoja in enumerate(sarja.katsoneet):
             katsoneet += "{}{}".format(katsoja, ", "*(a<katsoneita))
         self.taulukko.setItem(5, 0, QtWidgets.QTableWidgetItem(katsoneet))
+
 
     def taulukkomuokkaus(self, rivi, sarake):
         muuttunut = False
@@ -234,12 +255,12 @@ class Paaikkuna(object):
                     uusinimi, ok = dialogi.getText(self.centralwidget, 'Uusi alias', 'Alias:')
                     if ok and uusinimi and any([not(a.isspace()) for a in uusinimi]):
                         alias = uusinimi.replace("\"", "\\\"")
-                        print(alias)
+                        print(f"Lisätään alias {alias}")
                         sarja.aliakset.append(alias)
                         muuttunut = True
 
                 # Poista alias sarjan aliaslistasta
-                elif box.clickedButton() == poista:
+                elif box.clickedButton() == poista and sarja.aliakset:
                     dialogi = QtWidgets.QInputDialog()
                     alias, ok = dialogi.getItem(self.centralwidget, "Poista alias", "Aliakset", sarja.aliakset, 0, False)
                     if ok:
@@ -272,9 +293,10 @@ class Paaikkuna(object):
 
         if muuttunut:
             self.nayta_tiedot()
-            self.sarjannimet([SARJAT[a] for a in self.KARTOITIN])
-            ps.kirjoita_dikti(PIIRRETTYDIKTI, ps.TIETOKANTATIEDOSTO) # kirjoita päivitys tiedostoon
+            self.sarjannimet([self.SARJAT[a] for a in self.KARTOITIN])
+            ps.kirjoita_dikti(PIIRRETTYDIKTI, kvak.TIETOKANTATIEDOSTO) # kirjoita päivitys tiedostoon
             self.sarjalista.setCurrentRow(valittu) # palaa sarjalistalla sarjan kohdalle
+
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -288,6 +310,5 @@ if __name__ == "__main__":
     MainWindow = QtWidgets.QMainWindow()
     ui = Paaikkuna()
     ui.setupUi(MainWindow)
-    ui.sarjannimet(SARJAT)
     MainWindow.show()
     app.exec()

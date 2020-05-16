@@ -13,24 +13,43 @@ class Piirretty:
 		if not dikti.keys():
 			self.nimi				= ""			# Teoksen nimi
 			self.aliakset			= []			# Vaihtoehtoiset nimet
-			self.tyyppi				= []			# TV/OVA/MOV
+			self.tyyppi				= []			# TV/OVA/MOV/SP
 			self.jaksoja			= 0				# Jaksomäärä
-			# self.vuosi				= 0				# Alkamisvuosi
-			self.kuvake				= "oletus"	# MAL-kuvakkeen nimi
+			self.kuvake				= "oletus"		# MAL-kuvakkeen nimi
 			self.tiedostosijainti	= ""			# Kansion sijainti kovalevyllä
 			self.tagit				= []			# Sekalaisia tageja (listasarja, bakaBT etc)
 			self.mal 				= ""			# MAL-URL
 			self.katsoneet			= []			# Ketkä katsoneet
 		else:
-			self.nimi				= dikti.get("nimi")
-			self.aliakset			= dikti.get("aliakset")
-			self.tyyppi				= dikti.get("tyyppi")
-			self.jaksoja			= dikti.get("jaksoja")
-			self.kuvake				= dikti.get("kuvake")
-			self.tiedostosijainti	= dikti.get("tiedostosijainti")
-			self.tagit				= dikti.get("tagit")
-			self.mal 				= dikti.get("mal")
-			self.katsoneet			= dikti.get("katsoneet")
+			# Pohjusta oletusarvoilla ja nappaa mitä voi
+			self.nimi				= ""
+			self.aliakset			= []
+			self.tyyppi				= []
+			self.jaksoja			= 0
+			self.kuvake				= "oletus"
+			self.tiedostosijainti	= ""
+			self.tagit				= []
+			self.mal 				= ""
+			self.katsoneet			= []
+
+			if dikti.get("nimi"):
+				self.nimi				= dikti.get("nimi")
+			if dikti.get("aliakset"):
+				self.aliakset			= dikti.get("aliakset")
+			if dikti.get("tyyppi"):
+				self.tyyppi				= dikti.get("tyyppi")
+			if dikti.get("jaksoja"):
+				self.jaksoja			= dikti.get("jaksoja")
+			if dikti.get("kuvake"):
+				self.kuvake				= dikti.get("kuvake")
+			if dikti.get("tiedostosijainti"):
+				self.tiedostosijainti	= dikti.get("tiedostosijainti")
+			if dikti.get("tagit"):
+				self.tagit				= dikti.get("tagit")
+			if dikti.get("mal"):
+				self.mal 				= dikti.get("mal")
+			if dikti.get("katsoneet"):
+				self.katsoneet			= dikti.get("katsoneet")
 
 	def __str__(self):
 		stringi = "\t{\n"
@@ -148,6 +167,7 @@ class Hakuparametrit:
 			return(False)
 
 		# Jos ei mitään puutetta löydetty, sarja on ok
+		print("sarja ok")
 		return(True)
 
 	def hae_kriteereilla(self, sarjalista):
@@ -160,6 +180,7 @@ class Hakuparametrit:
 		indeksit		= []
 		for i,sarja in enumerate(sarjalista):
 			if self.tarkasta(sarja):
+				print("sarja {} täyttää ehdot".format(sarja.nimi))
 				hakutulokset.append(sarja)
 				indeksit.append(i)
 		return(hakutulokset, indeksit)

@@ -2,7 +2,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 class Ui_Puuttuvatsarjat(object):
-    def setupUi(self, Puuttuvatsarjat, sarjat, indeksit, ehdotukset):
+    def setupUi(self, Puuttuvatsarjat, Paaikkuna, indeksit, ehdotukset):
         Puuttuvatsarjat.setObjectName("Puuttuvatsarjat")
         Puuttuvatsarjat.resize(850, 285)
 
@@ -21,9 +21,11 @@ class Ui_Puuttuvatsarjat(object):
         self.sarjalista.setObjectName("sarjalista")
         self.sarjalista.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
         self.sarjalista.selectionModel().selectionChanged.connect(self.nayta_tiedot)
-        self.sarjat     = sarjat
-        self.indeksit   = indeksit
-        self.ehdotukset = ehdotukset
+
+        self.sarjat     = Paaikkuna.SARJAT  # lista kaikista sarjoista
+        self.indeksit   = indeksit          # puuttuvien indeksit
+        self.ehdotukset = ehdotukset        # kansioehdotukset
+        self.asetetut   = []                # sarjat joille on asetettu arvo (älä näytä enää listassa)
 
         self.teksti_vanhapolku = QtWidgets.QLineEdit(Puuttuvatsarjat)
         self.teksti_vanhapolku.setGeometry(QtCore.QRect(230, 40, 600, 31))
@@ -48,6 +50,7 @@ class Ui_Puuttuvatsarjat(object):
         self.Aseta = QtWidgets.QPushButton(Puuttuvatsarjat)
         self.Aseta.setGeometry(QtCore.QRect(230, 170, 51, 41))
         self.Aseta.setObjectName("Aseta")
+        self.Aseta.clicked.connect(self.aseta_uusikansio)
 
         self.Poista = QtWidgets.QPushButton(Puuttuvatsarjat)
         self.Poista.setGeometry(QtCore.QRect(290, 170, 51, 41))
@@ -73,7 +76,8 @@ class Ui_Puuttuvatsarjat(object):
 
     def sarjannimet(self):
         '''
-        Lisää sarjojen nimet listaan
+        Lisää sarjojen nimet listaan, mikäli sarjalle
+        ei ole vielä asetettu uutta kansiota
         '''
         nimet = []
         self.sarjalista.clear()
@@ -83,11 +87,32 @@ class Ui_Puuttuvatsarjat(object):
         self.sarjalista.show()
 
     def nayta_tiedot(self):
+        '''
+        Asettaa valitun sarjan tiedot (vanhan kansion ja ehdotuksen) näkyville
+        '''
         valittu = self.sarjalista.currentRow()
         if valittu != -1:
             sarja = self.sarjat[self.indeksit[valittu]]
             self.teksti_vanhapolku.setText(sarja.tiedostosijainti)
             self.teksti_uusipolku.setText(self.ehdotukset[valittu])
+
+    def aseta_uusikansio(self):
+        '''
+        Asettaa uuden kansion sarjan tietoihin
+        '''
+        valittu = self.sarjalista.currentRow()
+        if valittu != -1:
+            sarja = self.sarjat[self.indeksit[valittu]]
+            uusisijainti = self.teksti_uusipolku.text()
+            sarja.tiedostosijainti = uusisijainti
+            # sarja.tiedostosijainti = self.ehdotukset[valittu]
+            self.indeksit.pop(valittu)
+            self.ehdotukset.pop(valittu)
+            self.sarjannimet()
+            if self.indeksit:
+                self.sarjalista.setCurrentRow(0)
+
+
 
 # if __name__ == "__main__":
 #     import sys

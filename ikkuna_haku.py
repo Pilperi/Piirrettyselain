@@ -1,10 +1,10 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import class_piirretyt as cp
-import vakiot_piirrettysijainnit as ps
-import main_piirrettyselain
+import vakiot_kansiovakiot as kvak
+import main_piirrettyselain as piirrettyselain
 
 HAKUKRITEERIT = cp.Hakuparametrit()
-NULL = cp.NULL
+NULL = kvak.NULL
 
 MITAT = [535, 365] # ikkunan mitat
 
@@ -52,7 +52,7 @@ class Ui_Etsinikkuna(object):
             self.nappi_pilperi = QtWidgets.QPushButton(self.centralwidget)
             self.nappi_pilperi.setGeometry(QtCore.QRect(220, 50, 100, 100))
             self.nappi_pilperi.setFocusPolicy(QtCore.Qt.NoFocus)
-            self.nappi_pilperi.setIcon(QtGui.QIcon(ps.KUVA_PILPERI_0))
+            self.nappi_pilperi.setIcon(QtGui.QIcon(kvak.KUVA_PILPERI_0))
             self.nappi_pilperi.setIconSize(QtCore.QSize(100,100))
             self.nappi_pilperi.clicked.connect(lambda: self.tyyppihaku("Pilperi"))
             # self.nappi_pilperi.setCheckable(True)
@@ -61,28 +61,28 @@ class Ui_Etsinikkuna(object):
             self.nappi_haider = QtWidgets.QPushButton(self.centralwidget)
             self.nappi_haider.setGeometry(QtCore.QRect(320, 50, 100, 100))
             self.nappi_haider.setFocusPolicy(QtCore.Qt.NoFocus)
-            self.nappi_haider.setIcon(QtGui.QIcon(ps.KUVA_HAIDER_0))
+            self.nappi_haider.setIcon(QtGui.QIcon(kvak.KUVA_HAIDER_0))
             self.nappi_haider.setIconSize(QtCore.QSize(100,100))
             self.nappi_haider.clicked.connect(lambda: self.tyyppihaku("Haider"))
 
             self.nappi_lihakunkari = QtWidgets.QPushButton(self.centralwidget)
             self.nappi_lihakunkari.setGeometry(QtCore.QRect(420, 50, 100, 100))
             self.nappi_lihakunkari.setFocusPolicy(QtCore.Qt.NoFocus)
-            self.nappi_lihakunkari.setIcon(QtGui.QIcon(ps.KUVA_LIHAKUNKARI_0))
+            self.nappi_lihakunkari.setIcon(QtGui.QIcon(kvak.KUVA_LIHAKUNKARI_0))
             self.nappi_lihakunkari.setIconSize(QtCore.QSize(100,100))
             self.nappi_lihakunkari.clicked.connect(lambda: self.tyyppihaku("Lihakunkari"))
 
             self.nappi_nailo = QtWidgets.QPushButton(self.centralwidget)
             self.nappi_nailo.setGeometry(QtCore.QRect(220, 150, 100, 100))
             self.nappi_nailo.setFocusPolicy(QtCore.Qt.NoFocus)
-            self.nappi_nailo.setIcon(QtGui.QIcon(ps.KUVA_NAILO_0))
+            self.nappi_nailo.setIcon(QtGui.QIcon(kvak.KUVA_NAILO_0))
             self.nappi_nailo.setIconSize(QtCore.QSize(100,100))
             self.nappi_nailo.clicked.connect(lambda: self.tyyppihaku("Nailo"))
 
             self.nappi_tursake = QtWidgets.QPushButton(self.centralwidget)
             self.nappi_tursake.setGeometry(QtCore.QRect(320, 150, 100, 100))
             self.nappi_tursake.setFocusPolicy(QtCore.Qt.NoFocus)
-            self.nappi_tursake.setIcon(QtGui.QIcon(ps.KUVA_TURSAKE_0))
+            self.nappi_tursake.setIcon(QtGui.QIcon(kvak.KUVA_TURSAKE_0))
             self.nappi_tursake.setIconSize(QtCore.QSize(100,100))
             self.nappi_tursake.clicked.connect(lambda: self.tyyppihaku("Tursake"))
 
@@ -90,7 +90,7 @@ class Ui_Etsinikkuna(object):
             self.nappi_null.setGeometry(QtCore.QRect(420, 150, 100, 100))
             self.nappi_null.setFocusPolicy(QtCore.Qt.NoFocus)
             self.nappi_null.clicked.connect(lambda: self.tyyppihaku("Null"))
-            # self.nappi_null.setIcon(QtGui.QIcon(ps.KUVA_NULL_0))
+            # self.nappi_null.setIcon(QtGui.QIcon(kvak.KUVA_NULL_0))
             # self.nappi_null.setIconSize(QtCore.QSize(100,100))
 
         # Teostyypit
@@ -263,90 +263,90 @@ class Ui_Etsinikkuna(object):
             # Alustamaton tyyppilista
             if HAKUKRITEERIT.katsomatta is NULL:
                 HAKUKRITEERIT.katsomatta = ["Pilperi"]
-                self.nappi_pilperi.setIcon(QtGui.QIcon(ps.KUVA_PILPERI_1))
+                self.nappi_pilperi.setIcon(QtGui.QIcon(kvak.KUVA_PILPERI_1))
             # Poista kriteereistä ja aseta kuva harmaaksi
             elif "Pilperi" in HAKUKRITEERIT.katsomatta:
                 HAKUKRITEERIT.katsomatta.remove("Pilperi")
-                self.nappi_pilperi.setIcon(QtGui.QIcon(ps.KUVA_PILPERI_0))
+                self.nappi_pilperi.setIcon(QtGui.QIcon(kvak.KUVA_PILPERI_0))
             # Lisää kriteereihin
             else:
                 HAKUKRITEERIT.katsomatta.append("Pilperi")
-                self.nappi_pilperi.setIcon(QtGui.QIcon(ps.KUVA_PILPERI_1))
+                self.nappi_pilperi.setIcon(QtGui.QIcon(kvak.KUVA_PILPERI_1))
 
         elif katsoja == "Haider":
             # Alustamaton tyyppilista
             if HAKUKRITEERIT.katsomatta is NULL:
                 HAKUKRITEERIT.katsomatta = ["Haider"]
-                self.nappi_haider.setIcon(QtGui.QIcon(ps.KUVA_HAIDER_1))
+                self.nappi_haider.setIcon(QtGui.QIcon(kvak.KUVA_HAIDER_1))
             # Poista kriteereistä ja aseta kuva harmaaksi
             elif "Haider" in HAKUKRITEERIT.katsomatta:
                 HAKUKRITEERIT.katsomatta.remove("Haider")
-                self.nappi_haider.setIcon(QtGui.QIcon(ps.KUVA_HAIDER_0))
+                self.nappi_haider.setIcon(QtGui.QIcon(kvak.KUVA_HAIDER_0))
             # Lisää kriteereihin
             else:
                 HAKUKRITEERIT.katsomatta.append("Haider")
-                self.nappi_haider.setIcon(QtGui.QIcon(ps.KUVA_HAIDER_1))
+                self.nappi_haider.setIcon(QtGui.QIcon(kvak.KUVA_HAIDER_1))
 
         elif katsoja == "Lihakunkari":
             # Alustamaton tyyppilista
             if HAKUKRITEERIT.katsomatta is NULL:
                 HAKUKRITEERIT.katsomatta = ["Lihakunkari"]
-                self.nappi_lihakunkari.setIcon(QtGui.QIcon(ps.KUVA_LIHAKUNKARI_1))
+                self.nappi_lihakunkari.setIcon(QtGui.QIcon(kvak.KUVA_LIHAKUNKARI_1))
             # Poista kriteereistä ja aseta kuva harmaaksi
             elif "Lihakunkari" in HAKUKRITEERIT.katsomatta:
                 HAKUKRITEERIT.katsomatta.remove("Lihakunkari")
-                self.nappi_lihakunkari.setIcon(QtGui.QIcon(ps.KUVA_LIHAKUNKARI_0))
+                self.nappi_lihakunkari.setIcon(QtGui.QIcon(kvak.KUVA_LIHAKUNKARI_0))
             # Lisää kriteereihin
             else:
                 HAKUKRITEERIT.katsomatta.append("Lihakunkari")
-                self.nappi_lihakunkari.setIcon(QtGui.QIcon(ps.KUVA_LIHAKUNKARI_1))
+                self.nappi_lihakunkari.setIcon(QtGui.QIcon(kvak.KUVA_LIHAKUNKARI_1))
 
         elif katsoja == "Nailo":
             # Alustamaton tyyppilista
             if HAKUKRITEERIT.katsomatta is NULL:
                 HAKUKRITEERIT.katsomatta = ["Nailo"]
-                self.nappi_nailo.setIcon(QtGui.QIcon(ps.KUVA_NAILO_1))
+                self.nappi_nailo.setIcon(QtGui.QIcon(kvak.KUVA_NAILO_1))
             # Poista kriteereistä ja aseta kuva harmaaksi
             elif "Nailo" in HAKUKRITEERIT.katsomatta:
                 HAKUKRITEERIT.katsomatta.remove("Nailo")
-                self.nappi_nailo.setIcon(QtGui.QIcon(ps.KUVA_NAILO_0))
+                self.nappi_nailo.setIcon(QtGui.QIcon(kvak.KUVA_NAILO_0))
             # Lisää kriteereihin
             else:
                 HAKUKRITEERIT.katsomatta.append("Nailo")
-                self.nappi_nailo.setIcon(QtGui.QIcon(ps.KUVA_NAILO_1))
+                self.nappi_nailo.setIcon(QtGui.QIcon(kvak.KUVA_NAILO_1))
 
         elif katsoja == "Tursake":
             # Alustamaton tyyppilista
             if HAKUKRITEERIT.katsomatta is NULL:
                 HAKUKRITEERIT.katsomatta = ["Tursake"]
-                self.nappi_tursake.setIcon(QtGui.QIcon(ps.KUVA_TURSAKE_1))
+                self.nappi_tursake.setIcon(QtGui.QIcon(kvak.KUVA_TURSAKE_1))
             # Poista kriteereistä ja aseta kuva harmaaksi
             elif "Tursake" in HAKUKRITEERIT.katsomatta:
                 HAKUKRITEERIT.katsomatta.remove("Tursake")
-                self.nappi_tursake.setIcon(QtGui.QIcon(ps.KUVA_TURSAKE_0))
+                self.nappi_tursake.setIcon(QtGui.QIcon(kvak.KUVA_TURSAKE_0))
             # Lisää kriteereihin
             else:
                 HAKUKRITEERIT.katsomatta.append("Tursake")
-                self.nappi_tursake.setIcon(QtGui.QIcon(ps.KUVA_TURSAKE_1))
+                self.nappi_tursake.setIcon(QtGui.QIcon(kvak.KUVA_TURSAKE_1))
 
         # Kaikki päälle/pois
         else:
             # Poista kriteereistä ja aseta kuva harmaaksi
             if HAKUKRITEERIT.katsomatta:
                 HAKUKRITEERIT.katsomatta = NULL
-                self.nappi_pilperi.setIcon(QtGui.QIcon(ps.KUVA_PILPERI_0))
-                self.nappi_haider.setIcon(QtGui.QIcon(ps.KUVA_HAIDER_0))
-                self.nappi_lihakunkari.setIcon(QtGui.QIcon(ps.KUVA_LIHAKUNKARI_0))
-                self.nappi_nailo.setIcon(QtGui.QIcon(ps.KUVA_NAILO_0))
-                self.nappi_tursake.setIcon(QtGui.QIcon(ps.KUVA_TURSAKE_0))
+                self.nappi_pilperi.setIcon(QtGui.QIcon(kvak.KUVA_PILPERI_0))
+                self.nappi_haider.setIcon(QtGui.QIcon(kvak.KUVA_HAIDER_0))
+                self.nappi_lihakunkari.setIcon(QtGui.QIcon(kvak.KUVA_LIHAKUNKARI_0))
+                self.nappi_nailo.setIcon(QtGui.QIcon(kvak.KUVA_NAILO_0))
+                self.nappi_tursake.setIcon(QtGui.QIcon(kvak.KUVA_TURSAKE_0))
             # Lisää kaikki hakukriteereihin (kattaa myös NULL-tapauksen ou jes)
             else:
                 HAKUKRITEERIT.katsomatta = ["Pilperi", "Haider", "Lihakunkari", "Nailo", "Tursake"]
-                self.nappi_pilperi.setIcon(QtGui.QIcon(ps.KUVA_PILPERI_1))
-                self.nappi_haider.setIcon(QtGui.QIcon(ps.KUVA_HAIDER_1))
-                self.nappi_lihakunkari.setIcon(QtGui.QIcon(ps.KUVA_LIHAKUNKARI_1))
-                self.nappi_nailo.setIcon(QtGui.QIcon(ps.KUVA_NAILO_1))
-                self.nappi_tursake.setIcon(QtGui.QIcon(ps.KUVA_TURSAKE_1))
+                self.nappi_pilperi.setIcon(QtGui.QIcon(kvak.KUVA_PILPERI_1))
+                self.nappi_haider.setIcon(QtGui.QIcon(kvak.KUVA_HAIDER_1))
+                self.nappi_lihakunkari.setIcon(QtGui.QIcon(kvak.KUVA_LIHAKUNKARI_1))
+                self.nappi_nailo.setIcon(QtGui.QIcon(kvak.KUVA_NAILO_1))
+                self.nappi_tursake.setIcon(QtGui.QIcon(kvak.KUVA_TURSAKE_1))
 
     def hae(self):
         '''
@@ -380,6 +380,7 @@ class Ui_Etsinikkuna(object):
         # (vähän hölmöä takaisinpoimiskelua mut ihsm)
         hakudikti["katsomatta"] = HAKUKRITEERIT.katsomatta
         HAKUKRITEERIT = cp.Hakuparametrit(hakudikti)
+        # print(HAKUKRITEERIT)
 
         # Hae sarjat:
         hakutulos, indeksit = HAKUKRITEERIT.hae_kriteereilla(piirrettyselain.SARJAT)

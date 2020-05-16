@@ -1,5 +1,5 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-import vakiot_piirrettysijainnit as ps
+import vakiot_kansiovakiot as kvak
 import class_piirretyt as cp
 
 class Ui_Dialog(object):
@@ -37,9 +37,9 @@ class Ui_Dialog(object):
             self.nappi_pilperi.setCheckable(False)
             self.nappi_pilperi.setObjectName("nappi_pilperi")
             if "Pilperi" in self.katsoneet:
-                self.nappi_pilperi.setIcon(QtGui.QIcon(ps.KUVA_PILPERI_1))
+                self.nappi_pilperi.setIcon(QtGui.QIcon(kvak.KUVA_PILPERI_1))
             else:
-                self.nappi_pilperi.setIcon(QtGui.QIcon(ps.KUVA_PILPERI_0))
+                self.nappi_pilperi.setIcon(QtGui.QIcon(kvak.KUVA_PILPERI_0))
             self.nappi_pilperi.setIconSize(QtCore.QSize(100,100))
             self.nappi_pilperi.clicked.connect(lambda: self.klikkaakatsojaa("Pilperi"))
 
@@ -49,9 +49,9 @@ class Ui_Dialog(object):
             self.nappi_haider.setCheckable(False)
             self.nappi_haider.setObjectName("nappi_haider")
             if "Haider" in self.katsoneet:
-                self.nappi_haider.setIcon(QtGui.QIcon(ps.KUVA_HAIDER_1))
+                self.nappi_haider.setIcon(QtGui.QIcon(kvak.KUVA_HAIDER_1))
             else:
-                self.nappi_haider.setIcon(QtGui.QIcon(ps.KUVA_HAIDER_0))
+                self.nappi_haider.setIcon(QtGui.QIcon(kvak.KUVA_HAIDER_0))
             self.nappi_haider.setIconSize(QtCore.QSize(100,100))
             self.nappi_haider.clicked.connect(lambda: self.klikkaakatsojaa("Haider"))
 
@@ -61,9 +61,9 @@ class Ui_Dialog(object):
             self.nappi_lihakunkari.setCheckable(False)
             self.nappi_lihakunkari.setObjectName("nappi_lihakunkari")
             if "Lihakunkari" in self.katsoneet:
-                self.nappi_lihakunkari.setIcon(QtGui.QIcon(ps.KUVA_LIHAKUNKARI_1))
+                self.nappi_lihakunkari.setIcon(QtGui.QIcon(kvak.KUVA_LIHAKUNKARI_1))
             else:
-                self.nappi_lihakunkari.setIcon(QtGui.QIcon(ps.KUVA_LIHAKUNKARI_0))
+                self.nappi_lihakunkari.setIcon(QtGui.QIcon(kvak.KUVA_LIHAKUNKARI_0))
             self.nappi_lihakunkari.setIconSize(QtCore.QSize(100,100))
             self.nappi_lihakunkari.clicked.connect(lambda: self.klikkaakatsojaa("Lihakunkari"))
 
@@ -73,9 +73,9 @@ class Ui_Dialog(object):
             self.nappi_nailo.setCheckable(False)
             self.nappi_nailo.setObjectName("nappi_nailo")
             if "Nailo" in self.katsoneet:
-                self.nappi_nailo.setIcon(QtGui.QIcon(ps.KUVA_NAILO_1))
+                self.nappi_nailo.setIcon(QtGui.QIcon(kvak.KUVA_NAILO_1))
             else:
-                self.nappi_nailo.setIcon(QtGui.QIcon(ps.KUVA_NAILO_0))
+                self.nappi_nailo.setIcon(QtGui.QIcon(kvak.KUVA_NAILO_0))
             self.nappi_nailo.setIconSize(QtCore.QSize(100,100))
             self.nappi_nailo.clicked.connect(lambda: self.klikkaakatsojaa("Nailo"))
 
@@ -85,9 +85,9 @@ class Ui_Dialog(object):
             self.nappi_tursake.setCheckable(False)
             self.nappi_tursake.setObjectName("nappi_tursake")
             if "Tursake" in self.katsoneet:
-                self.nappi_tursake.setIcon(QtGui.QIcon(ps.KUVA_TURSAKE_1))
+                self.nappi_tursake.setIcon(QtGui.QIcon(kvak.KUVA_TURSAKE_1))
             else:
-                self.nappi_tursake.setIcon(QtGui.QIcon(ps.KUVA_TURSAKE_0))
+                self.nappi_tursake.setIcon(QtGui.QIcon(kvak.KUVA_TURSAKE_0))
             self.nappi_tursake.setIconSize(QtCore.QSize(100,100))
             self.nappi_tursake.clicked.connect(lambda: self.klikkaakatsojaa("Tursake"))
 
@@ -117,70 +117,70 @@ class Ui_Dialog(object):
             # Poista kriteereistä ja aseta kuva harmaaksi
             if "Pilperi" in self.katsoneet:
                 self.katsoneet.remove("Pilperi")
-                self.nappi_pilperi.setIcon(QtGui.QIcon(ps.KUVA_PILPERI_0))
+                self.nappi_pilperi.setIcon(QtGui.QIcon(kvak.KUVA_PILPERI_0))
             # Lisää kriteereihin
             else:
                 self.katsoneet.append("Pilperi")
-                self.nappi_pilperi.setIcon(QtGui.QIcon(ps.KUVA_PILPERI_1))
+                self.nappi_pilperi.setIcon(QtGui.QIcon(kvak.KUVA_PILPERI_1))
 
         elif katsoja == "Haider":
             # Poista kriteereistä ja aseta kuva harmaaksi
             if "Haider" in self.katsoneet:
                 self.katsoneet.remove("Haider")
-                self.nappi_haider.setIcon(QtGui.QIcon(ps.KUVA_HAIDER_0))
+                self.nappi_haider.setIcon(QtGui.QIcon(kvak.KUVA_HAIDER_0))
             # Lisää kriteereihin
             else:
                 self.katsoneet.append("Haider")
-                self.nappi_haider.setIcon(QtGui.QIcon(ps.KUVA_HAIDER_1))
+                self.nappi_haider.setIcon(QtGui.QIcon(kvak.KUVA_HAIDER_1))
 
         elif katsoja == "Lihakunkari":
             # Poista kriteereistä ja aseta kuva harmaaksi
             if "Lihakunkari" in self.katsoneet:
                 self.katsoneet.remove("Lihakunkari")
-                self.nappi_lihakunkari.setIcon(QtGui.QIcon(ps.KUVA_LIHAKUNKARI_0))
+                self.nappi_lihakunkari.setIcon(QtGui.QIcon(kvak.KUVA_LIHAKUNKARI_0))
             # Lisää kriteereihin
             else:
                 self.katsoneet.append("Lihakunkari")
-                self.nappi_lihakunkari.setIcon(QtGui.QIcon(ps.KUVA_LIHAKUNKARI_1))
+                self.nappi_lihakunkari.setIcon(QtGui.QIcon(kvak.KUVA_LIHAKUNKARI_1))
 
         elif katsoja == "Nailo":
             # Poista kriteereistä ja aseta kuva harmaaksi
             if "Nailo" in self.katsoneet:
                 self.katsoneet.remove("Nailo")
-                self.nappi_nailo.setIcon(QtGui.QIcon(ps.KUVA_NAILO_0))
+                self.nappi_nailo.setIcon(QtGui.QIcon(kvak.KUVA_NAILO_0))
             # Lisää kriteereihin
             else:
                 self.katsoneet.append("Nailo")
-                self.nappi_nailo.setIcon(QtGui.QIcon(ps.KUVA_NAILO_1))
+                self.nappi_nailo.setIcon(QtGui.QIcon(kvak.KUVA_NAILO_1))
 
         elif katsoja == "Tursake":
             # Poista kriteereistä ja aseta kuva harmaaksi
             if "Tursake" in self.katsoneet:
                 self.katsoneet.remove("Tursake")
-                self.nappi_tursake.setIcon(QtGui.QIcon(ps.KUVA_TURSAKE_0))
+                self.nappi_tursake.setIcon(QtGui.QIcon(kvak.KUVA_TURSAKE_0))
             # Lisää kriteereihin
             else:
                 self.katsoneet.append("Tursake")
-                self.nappi_tursake.setIcon(QtGui.QIcon(ps.KUVA_TURSAKE_1))
+                self.nappi_tursake.setIcon(QtGui.QIcon(kvak.KUVA_TURSAKE_1))
 
         # Kaikki päälle/pois
         else:
             # Poista kriteereistä ja aseta kuva harmaaksi
             if self.katsoneet:
                 self.katsoneet = []
-                self.nappi_pilperi.setIcon(QtGui.QIcon(ps.KUVA_PILPERI_0))
-                self.nappi_haider.setIcon(QtGui.QIcon(ps.KUVA_HAIDER_0))
-                self.nappi_lihakunkari.setIcon(QtGui.QIcon(ps.KUVA_LIHAKUNKARI_0))
-                self.nappi_nailo.setIcon(QtGui.QIcon(ps.KUVA_NAILO_0))
-                self.nappi_tursake.setIcon(QtGui.QIcon(ps.KUVA_TURSAKE_0))
+                self.nappi_pilperi.setIcon(QtGui.QIcon(kvak.KUVA_PILPERI_0))
+                self.nappi_haider.setIcon(QtGui.QIcon(kvak.KUVA_HAIDER_0))
+                self.nappi_lihakunkari.setIcon(QtGui.QIcon(kvak.KUVA_LIHAKUNKARI_0))
+                self.nappi_nailo.setIcon(QtGui.QIcon(kvak.KUVA_NAILO_0))
+                self.nappi_tursake.setIcon(QtGui.QIcon(kvak.KUVA_TURSAKE_0))
             # Lisää kaikki hakukriteereihin (kattaa myös NULL-tapauksen ou jes)
             else:
                 self.katsoneet = ["Pilperi", "Haider", "Lihakunkari", "Nailo", "Tursake"]
-                self.nappi_pilperi.setIcon(QtGui.QIcon(ps.KUVA_PILPERI_1))
-                self.nappi_haider.setIcon(QtGui.QIcon(ps.KUVA_HAIDER_1))
-                self.nappi_lihakunkari.setIcon(QtGui.QIcon(ps.KUVA_LIHAKUNKARI_1))
-                self.nappi_nailo.setIcon(QtGui.QIcon(ps.KUVA_NAILO_1))
-                self.nappi_tursake.setIcon(QtGui.QIcon(ps.KUVA_TURSAKE_1))
+                self.nappi_pilperi.setIcon(QtGui.QIcon(kvak.KUVA_PILPERI_1))
+                self.nappi_haider.setIcon(QtGui.QIcon(kvak.KUVA_HAIDER_1))
+                self.nappi_lihakunkari.setIcon(QtGui.QIcon(kvak.KUVA_LIHAKUNKARI_1))
+                self.nappi_nailo.setIcon(QtGui.QIcon(kvak.KUVA_NAILO_1))
+                self.nappi_tursake.setIcon(QtGui.QIcon(kvak.KUVA_TURSAKE_1))
 
 if __name__ == "__main__":
     '''
