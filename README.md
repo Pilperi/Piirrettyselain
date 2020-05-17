@@ -24,6 +24,7 @@ Varsinainen "ajettava" pääikkuna on `main_piirrettyselain.py`, joka kutsuu tar
 				+ Kansiotiedon päivitys
 				+ Kyselyikkunan päivitys
 				+ Signalointi pääikkunan suuntaan
+				+ Lautausikkuna josta näkee missä mennään (tarvii komentoriviä tuijotella)
 				- Kansioavausnapin toiminta (avaa ehdotuskansio, ez)
 				- Sarjan poistaminen tietokannasta (kansiota ei ole koska poistettu, poista tietokannasta)
 

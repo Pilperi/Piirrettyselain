@@ -5,6 +5,7 @@ import vakiot_kansiovakiot as kvak
 import class_piirretyt as cp
 import ikkuna_haku
 import ikkuna_katsoneet
+import ikkuna_puuttuvahaku
 import ikkuna_puuttuvamuokkain
 import funktiot_kansiofunktiot as kfun
 import funktiot_anilist as anifun
@@ -39,11 +40,19 @@ class Paaikkuna(object):
         self.KARTOITIN   = [i for i in range(len(SARJAT))]
 
         # Tarkista puuttuvat sarjat
-        indeksit, ehdotukset = ps.tarkasta_puuttuvat(SARJAT)
-        if indeksit:
+        self.muuttuneetindeksit = []        # Lista sarjoista (indekseistä) joille on käynyt hassusti
+        self.ehdotukset         = []        # Lista ehdotetuista tiedostosijainneista
+        self.peruutettiin       = True      # Jos käyttäjä peruutti toimenpiteen
+        # self.indeksit, self.ehdotukset = ps.tarkasta_puuttuvat(self.SARJAT)
+        puuttuvien_tarkistusikkuna = ikkuna_puuttuvahaku.Tarkistuksen_edistyminen(self)
+        puuttuvien_tarkistusikkuna.exec()
+        print(len(self.muuttuneetindeksit))
+        print(self.peruutettiin)
+
+        if not self.peruutettiin and self.muuttuneetindeksit:
             Dialog = QtWidgets.QDialog()
             ui = ikkuna_puuttuvamuokkain.Ui_Puuttuvatsarjat()
-            ui.setupUi(Dialog, self, indeksit, ehdotukset)
+            ui.setupUi(Dialog, self)
             ui.sarjannimet()
             paluuarvo = Dialog.exec()
             if paluuarvo:

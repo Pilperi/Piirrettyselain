@@ -2,12 +2,12 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 class Ui_Puuttuvatsarjat(object):
-    def setupUi(self, Puuttuvatsarjat, Paaikkuna, indeksit, ehdotukset):
+    def setupUi(self, Puuttuvatsarjat, Paaikkuna):
         Puuttuvatsarjat.setObjectName("Puuttuvatsarjat")
         Puuttuvatsarjat.resize(850, 285)
 
-        font = QtGui.QFont()
-        font.setPointSize(12)
+        # font = QtGui.QFont()
+        # font.setPointSize(12)
 
         self.buttonBox = QtWidgets.QDialogButtonBox(Puuttuvatsarjat)
         self.buttonBox.setGeometry(QtCore.QRect(50, 240, 341, 32))
@@ -22,10 +22,9 @@ class Ui_Puuttuvatsarjat(object):
         self.sarjalista.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
         self.sarjalista.selectionModel().selectionChanged.connect(self.nayta_tiedot)
 
-        self.sarjat     = Paaikkuna.SARJAT  # lista kaikista sarjoista
-        self.indeksit   = indeksit          # puuttuvien indeksit
-        self.ehdotukset = ehdotukset        # kansioehdotukset
-        self.asetetut   = []                # sarjat joille on asetettu arvo (älä näytä enää listassa)
+        self.sarjat     = Paaikkuna.SARJAT                  # lista kaikista sarjoista
+        self.indeksit   = Paaikkuna.muuttuneetindeksit      # puuttuvien indeksit
+        self.ehdotukset = Paaikkuna.ehdotukset              # kansioehdotukset
 
         self.teksti_vanhapolku = QtWidgets.QLineEdit(Puuttuvatsarjat)
         self.teksti_vanhapolku.setGeometry(QtCore.QRect(230, 40, 600, 31))
