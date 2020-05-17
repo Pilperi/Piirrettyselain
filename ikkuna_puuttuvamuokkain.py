@@ -1,3 +1,6 @@
+import os
+import subprocess
+import time
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
@@ -22,6 +25,7 @@ class Ui_Puuttuvatsarjat(object):
         self.sarjalista.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
         self.sarjalista.selectionModel().selectionChanged.connect(self.nayta_tiedot)
 
+        self.Paaikkuna  = Paaikkuna
         self.sarjat     = Paaikkuna.SARJAT                  # lista kaikista sarjoista
         self.indeksit   = Paaikkuna.muuttuneetindeksit      # puuttuvien indeksit
         self.ehdotukset = Paaikkuna.ehdotukset              # kansioehdotukset
@@ -45,6 +49,10 @@ class Ui_Puuttuvatsarjat(object):
         # self.teksti_uusipolku.setFont(font)
         self.teksti_uusipolku.setText("")
         self.teksti_uusipolku.setObjectName("teksti_uusipolku")
+        self.teksti_uusipolku.textChanged.connect(self.tarkistakansio)
+        completer = QtWidgets.QCompleter()
+        completer.setModel(QtWidgets.QDirModel(completer))
+        self.teksti_uusipolku.setCompleter(completer)
 
         self.Aseta = QtWidgets.QPushButton(Puuttuvatsarjat)
         self.Aseta.setGeometry(QtCore.QRect(230, 170, 51, 41))
@@ -54,10 +62,12 @@ class Ui_Puuttuvatsarjat(object):
         self.Poista = QtWidgets.QPushButton(Puuttuvatsarjat)
         self.Poista.setGeometry(QtCore.QRect(290, 170, 51, 41))
         self.Poista.setObjectName("Poista")
+        self.Poista.clicked.connect(self.poistasarja)
 
         self.Kansio = QtWidgets.QPushButton(Puuttuvatsarjat)
         self.Kansio.setGeometry(QtCore.QRect(400, 170, 51, 41))
         self.Kansio.setObjectName("Kansio")
+        self.Kansio.clicked.connect(self.avaa_ehdotuskansio)
 
         self.retranslateUi(Puuttuvatsarjat)
         self.buttonBox.accepted.connect(Puuttuvatsarjat.accept)
@@ -89,20 +99,36 @@ class Ui_Puuttuvatsarjat(object):
         '''
         Asettaa valitun sarjan tiedot (vanhan kansion ja ehdotuksen) näkyville
         '''
-        valittu = self.sarjalista.currentRow()
-        if valittu != -1:
-            sarja = self.sarjat[self.indeksit[valittu]]
-            self.teksti_vanhapolku.setText(sarja.tiedostosijainti)
-            self.teksti_uusipolku.setText(self.ehdotukset[valittu])
+        if self.indeksit:
+            valittu = self.sarjalista.currentRow()
+            if valittu != -1:
+                sarja = self.sarjat[self.indeksit[valittu]]
+                self.teksti_vanhapolku.setText(sarja.tiedostosijainti)
+                self.teksti_uusipolku.setText(self.ehdotukset[valittu])
 
+    def tarkistakansio(self):
+        '''
+        Tarkistaa, onko ehdotettu uusi kansio olemassa vai ei
+        '''
+        if self.teksti_uusipolku.text():
+            if os.path.exists(self.teksti_uusipolku.text()):
+                self.teksti_uusipolku.setStyleSheet("background-color: #3eaf18; color: black") # vihreä ruutu
+            else:
+                self.teksti_uusipolku.setStyleSheet("background-color: #e189a8; color: black") # punainen ruutu
+        else:
+            self.teksti_uusipolku.setStyleSheet("background-color: grey") # normiruutu
+    
     def aseta_uusikansio(self):
         '''
         Asettaa uuden kansion sarjan tietoihin
         '''
         valittu = self.sarjalista.currentRow()
-        if valittu != -1:
+        if valittu != -1 and self.teksti_uusipolku.text():
             sarja = self.sarjat[self.indeksit[valittu]]
             uusisijainti = self.teksti_uusipolku.text()
+            # Ei kautta- tai kenoviivaan päättyviä polkuja
+            if uusisijainti[-1] in ["/", "\\"]:
+                uusisijainti = uusisijainti[:-1]
             sarja.tiedostosijainti = uusisijainti
             # sarja.tiedostosijainti = self.ehdotukset[valittu]
             self.indeksit.pop(valittu)
@@ -111,13 +137,25 @@ class Ui_Puuttuvatsarjat(object):
             if self.indeksit:
                 self.sarjalista.setCurrentRow(0)
 
+    def poistasarja(self):
+        '''
+        Poistetaan sarja tietokannasta, koska se on poistettu kovalevyltä
+        '''
+        valittu = self.sarjalista.currentRow()
+        if self.indeksit and valittu != -1:
+            self.Paaikkuna.poistetutsarjat.append(self.indeksit[valittu])
+            self.indeksit.pop(valittu)
+            self.ehdotukset.pop(valittu)
+            self.sarjannimet()
+            if self.indeksit:
+                self.sarjalista.setCurrentRow(0)
 
-
-# if __name__ == "__main__":
-#     import sys
-#     app = QtWidgets.QApplication(sys.argv)
-#     Puuttuvatsarjat = QtWidgets.QDialog()
-#     ui = Ui_Puuttuvatsarjat()
-#     ui.setupUi(Puuttuvatsarjat)
-#     Puuttuvatsarjat.show()
-#     sys.exit(app.exec_())
+    def avaa_ehdotuskansio(self):
+        '''
+        Avaa ehdotetun kansion jotta käyttäjä voi katsoa näyttääkö oikealta
+        '''
+        valittu = self.sarjalista.currentRow()
+        if valittu != -1:
+            uusisijainti = self.teksti_uusipolku.text()
+            if os.path.exists(uusisijainti):
+                subprocess.run(["dolphin", uusisijainti], stdin=None, stdout=None, stderr=None)

@@ -77,7 +77,7 @@ class Tarkistuksen_edistyminen(QtWidgets.QDialog):
             self.tarkastettava.setText(sarja.nimi)
             self.kansiossa.setText(sarja.tiedostosijainti)
             if not os.path.exists(sarja.tiedostosijainti):
-                self.kansiossa.setStyleSheet("background-color: #ff9bbd; color: black; font-weight: bold")
+                self.kansiossa.setStyleSheet("background-color: #e189a8; color: black") # punainen ruutu
                 kansionimi = os.path.basename(sarja.tiedostosijainti)
                 ehdokas = ""
 
@@ -97,7 +97,7 @@ class Tarkistuksen_edistyminen(QtWidgets.QDialog):
                 print(f"puuttuva: {sarja.tiedostosijainti}")
                 print(f"ehdotus:  {ehdokas}")
             else:
-                self.kansiossa.setStyleSheet("background-color: #5aff23; color: black")
+                self.kansiossa.setStyleSheet("background-color: #3eaf18; color: black") # vihreä ruutu
             self.progressBar.setValue(indeksi)
             self.value = f"{indeksi+1}/{sarjoja}"
         self.Isantaikkuna.muuttuneetindeksit      = indeksit
@@ -121,11 +121,3 @@ class Tarkistuksen_edistyminen(QtWidgets.QDialog):
             self.tarkastettava.setText("Valmis")
             self.kansiossa.setText("Valmis!")
             # self.close()
-        
-# if __name__ == '__main__':
-#     import sys
-#     app = QtWidgets.QApplication([])
-#     Isantaikkuna = "Olen isäntäikkuna"
-#     ex = Tarkistuksen_edistyminen(Isantaikkuna)
-#     app.exec()
-    # sys.exit(app.exec_())

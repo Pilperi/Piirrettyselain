@@ -21,7 +21,7 @@ class Piirretty:
 			self.mal 				= ""			# MAL-URL
 			self.katsoneet			= []			# Ketkä katsoneet
 		else:
-			# Pohjusta oletusarvoilla ja nappaa mitä voi
+			# Pohjusta oletusarvoilla ja nappaa diktistä mitä voi
 			self.nimi				= ""
 			self.aliakset			= []
 			self.tyyppi				= []
@@ -52,6 +52,9 @@ class Piirretty:
 				self.katsoneet			= dikti.get("katsoneet")
 
 	def __str__(self):
+		'''
+		Stringiversio sarjasta, JSON yhteensopiva ja lähinnä tietokantaan dumppaamista varten
+		'''
 		stringi = "\t{\n"
 		stringi += "\t\t\"nimi\":\"{}\",\n".format(self.nimi)
 		stringi += "\t\t\"aliakset\":["
@@ -80,6 +83,39 @@ class Piirretty:
 		stringi += "]\n"
 		stringi += "\t}"
 		return(stringi)
+
+	def __eq__(self, other):
+		'''
+		Ekvivalenssivertailuoperaatio: kaksi sarjaa on samoja
+		jos niiden kaikissa kentissä on sama arvo.
+		(Voisi olla löysempikin, esim. nimi ja tiedostosijainti,
+		mutta tätä operaatiota käytetään hyvin pitkälti vain tilanteissa missä
+		diktiin ei ole tehty mitään muutoksia, ts. puuttuvien tarkistuksessa)
+
+
+		Ei tätä tarvittukaan, 'is'-operaatio riitti. Jätetään nyt hengailemaan lol
+		'''
+		if type(self) is not type(other):
+			return(False)
+		if self.nimi != other.nimi:
+			return(False)
+		if self.aliakset != other.aliakset:
+			return(False)
+		if self.tyyppi != other.tyyppi:
+			return(False)
+		if self.jaksoja != other.jaksoja:
+			return(False)
+		if self.kuvake != other.kuvake:
+			return(False)
+		if self.tiedostosijainti != other.tiedostosijainti:
+			return(False)
+		if self.tagit != other.tagit:
+			return(False)
+		if self.mal != other.mal:
+			return(False)
+		if self.katsoneet != other.katsoneet:
+			return(False)
+		return(True)
 
 
 class Hakuparametrit:
@@ -159,7 +195,7 @@ class Hakuparametrit:
 			return(False)
 
 		# sarja on väärää tyyppiä
-		if (self.tyyppi is not NULL) and not(any([(a not in sarja.tyyppi) for a in self.tyyppi])):
+		if (self.tyyppi is not NULL) and any([(a not in sarja.tyyppi) for a in self.tyyppi]):
 			return(False)
 
 		# sarjalla ei ole haluttuja tageja tai sillä on tageja joita sillä ei pitäisi olla

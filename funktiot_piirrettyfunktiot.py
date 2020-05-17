@@ -67,6 +67,19 @@ def tarkasta_puuttuvat(sarjalista):
 def tarkasta_uudet():
 	pass
 
+def poista_diktista(dikti, sarja):
+	'''
+	Poistaa sarjan diktistä, jotta tietokantaa voidaan päivittää.
+	Joo, uniikit ID:t ois ihan näppäriä...
+	'''
+	for kansio in dikti:
+		for d,diktisarja in enumerate(dikti[kansio]):
+			if sarja is diktisarja:
+				# Sarjat on samoja jos niiden tietokentät ovat samoja
+				print("{} on {}".format(sarja.nimi, diktisarja.nimi))
+				dikti[kansio].pop(d)
+				break
+
 def lue_piirretyt():
 	'''
 	Lue piirretyt ennalta määrätyistä kansioista ja arvaa niille arvot

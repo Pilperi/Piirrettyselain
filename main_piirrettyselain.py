@@ -1,6 +1,6 @@
 import os
 import subprocess
-import funktiot_piirrettyfunktiot as ps
+import funktiot_piirrettyfunktiot as pfun
 import vakiot_kansiovakiot as kvak
 import class_piirretyt as cp
 import ikkuna_haku
@@ -14,13 +14,13 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 KUVAKANSIO = kvak.KUVAKANSIO
 KUVAT = kfun.kansion_sisalto(KUVAKANSIO)[0]
 OLETUSKUVA = os.path.join(KUVAKANSIO, "oletus.png")
-PIIRRETTYDIKTI = ps.PIIRRETTYDIKTI
+PIIRRETTYDIKTI = pfun.PIIRRETTYDIKTI
 SARJAT = []
 for kansio in PIIRRETTYDIKTI:
     for sarja in PIIRRETTYDIKTI[kansio]:
         SARJAT.append(sarja)
 # Sarjat aakkosjärjestykseen
-SARJAT = ps.jarjesta(SARJAT)
+SARJAT = pfun.jarjesta(SARJAT)
 
 # Mitä näytetään listassa
 NAYTETTAVAT = SARJAT                           # Mitä listalla näytetään (osajoukko SARJAT-listasta)
@@ -43,12 +43,11 @@ class Paaikkuna(object):
         self.muuttuneetindeksit = []        # Lista sarjoista (indekseistä) joille on käynyt hassusti
         self.ehdotukset         = []        # Lista ehdotetuista tiedostosijainneista
         self.peruutettiin       = True      # Jos käyttäjä peruutti toimenpiteen
-        # self.indeksit, self.ehdotukset = ps.tarkasta_puuttuvat(self.SARJAT)
+        # self.indeksit, self.ehdotukset = pfun.tarkasta_puuttuvat(self.SARJAT)
         puuttuvien_tarkistusikkuna = ikkuna_puuttuvahaku.Tarkistuksen_edistyminen(self)
         puuttuvien_tarkistusikkuna.exec()
-        print(len(self.muuttuneetindeksit))
-        print(self.peruutettiin)
 
+        self.poistetutsarjat = []
         if not self.peruutettiin and self.muuttuneetindeksit:
             Dialog = QtWidgets.QDialog()
             ui = ikkuna_puuttuvamuokkain.Ui_Puuttuvatsarjat()
@@ -57,7 +56,15 @@ class Paaikkuna(object):
             paluuarvo = Dialog.exec()
             if paluuarvo:
                 print("Muuttunut")
-                ps.kirjoita_dikti(PIIRRETTYDIKTI, kvak.TIETOKANTATIEDOSTO) # kirjoita päivitys tiedostoon
+                if self.poistetutsarjat:
+                    print("Poistetaan sarjat:")
+                    i = len(self.poistetutsarjat)-1
+                    while i >= 0:
+                        print(self.SARJAT[self.poistetutsarjat[i]].nimi)
+                        pfun.poista_diktista(PIIRRETTYDIKTI, self.SARJAT[self.poistetutsarjat[i]])
+                        self.SARJAT.pop(self.poistetutsarjat[i])
+                        i -= 1
+                pfun.kirjoita_dikti(PIIRRETTYDIKTI, kvak.TIETOKANTATIEDOSTO) # kirjoita päivitys tiedostoon
             else:
                 print("Peruttu")
 
@@ -68,7 +75,7 @@ class Paaikkuna(object):
             # Jos joku on katsonut sarjan joka on koneen kovalevyllä, päivitetään tämä
             # tieto sarjan tietoihin
             if muuttunut:
-                ps.kirjoita_dikti(PIIRRETTYDIKTI, kvak.TIETOKANTATIEDOSTO)
+                pfun.kirjoita_dikti(PIIRRETTYDIKTI, kvak.TIETOKANTATIEDOSTO)
         
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(MITAT[0], MITAT[1])
@@ -144,7 +151,7 @@ class Paaikkuna(object):
 
     def avaakansio(self):
         valittu = self.sarjalista.currentRow()
-        if valittu != -1 and valittu < SARJOJA:
+        if valittu != -1 and valittu < SARJOJA and os.path.exists(SARJAT[self.KARTOITIN[valittu]].tiedostosijainti):
             sarja = SARJAT[self.KARTOITIN[valittu]]
             print("Valittu sarja: {}\nKansiossa: {}".format(sarja.nimi, sarja.tiedostosijainti))
             subprocess.run(["dolphin", sarja.tiedostosijainti], stdin=None, stdout=None, stderr=None)
@@ -190,6 +197,10 @@ class Paaikkuna(object):
             if os.path.exists(kuvake):
                 self.kuva.setIcon(QtGui.QIcon(kuvake))
             self.tietotaulukko(sarja)
+            if not os.path.exists(sarja.tiedostosijainti):
+                self.kansionappi.setStyleSheet("background-color: #e189a8; color: black") # punainen ruutu
+            else:
+                self.kansionappi.setStyleSheet("") # punainen ruutu
         else:
         	# tyhjä sarja
         	self.tietotaulukko(cp.Piirretty())
@@ -303,7 +314,7 @@ class Paaikkuna(object):
         if muuttunut:
             self.nayta_tiedot()
             self.sarjannimet([self.SARJAT[a] for a in self.KARTOITIN])
-            ps.kirjoita_dikti(PIIRRETTYDIKTI, kvak.TIETOKANTATIEDOSTO) # kirjoita päivitys tiedostoon
+            pfun.kirjoita_dikti(PIIRRETTYDIKTI, kvak.TIETOKANTATIEDOSTO) # kirjoita päivitys tiedostoon
             self.sarjalista.setCurrentRow(valittu) # palaa sarjalistalla sarjan kohdalle
 
 
