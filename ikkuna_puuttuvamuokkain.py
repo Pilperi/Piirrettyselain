@@ -1,26 +1,22 @@
 import os
 import subprocess
-import time
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 class Ui_Puuttuvatsarjat(object):
     def setupUi(self, Puuttuvatsarjat, Paaikkuna):
         Puuttuvatsarjat.setObjectName("Puuttuvatsarjat")
-        Puuttuvatsarjat.resize(850, 285)
+        self.MARGINAALIT = [10,10]
+        self.MITAT       = [850,220]
+        Puuttuvatsarjat.resize(self.MITAT[0], self.MITAT[1])
+        Puuttuvatsarjat.setMinimumSize(self.MITAT[0], self.MITAT[1])
+        Puuttuvatsarjat.setMaximumSize(self.MITAT[0], self.MITAT[1])
 
         # font = QtGui.QFont()
         # font.setPointSize(12)
 
-        self.buttonBox = QtWidgets.QDialogButtonBox(Puuttuvatsarjat)
-        self.buttonBox.setGeometry(QtCore.QRect(50, 240, 341, 32))
-        self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
-        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
-        self.buttonBox.setCenterButtons(True)
-        self.buttonBox.setObjectName("buttonBox")
-
         self.sarjalista = QtWidgets.QListWidget(Puuttuvatsarjat)
-        self.sarjalista.setGeometry(QtCore.QRect(10, 20, 211, 201))
+        self.sarjalista.setGeometry(QtCore.QRect(self.MARGINAALIT[0], self.MARGINAALIT[1], 210, 200))
         self.sarjalista.setObjectName("sarjalista")
         self.sarjalista.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
         self.sarjalista.selectionModel().selectionChanged.connect(self.nayta_tiedot)
@@ -30,22 +26,23 @@ class Ui_Puuttuvatsarjat(object):
         self.indeksit   = Paaikkuna.muuttuneetindeksit      # puuttuvien indeksit
         self.ehdotukset = Paaikkuna.ehdotukset              # kansioehdotukset
 
+        self.label_vanhapolku = QtWidgets.QLabel(Puuttuvatsarjat)
+        self.label_vanhapolku.setGeometry(QtCore.QRect(self.MARGINAALIT[0]*2+210, 5, 600, 30))
+        self.label_vanhapolku.setObjectName("label_vanhapolku")
+
         self.teksti_vanhapolku = QtWidgets.QLineEdit(Puuttuvatsarjat)
-        self.teksti_vanhapolku.setGeometry(QtCore.QRect(230, 40, 600, 31))
+        self.teksti_vanhapolku.setGeometry(QtCore.QRect(self.MARGINAALIT[0]*2+210, 30, 600, 30))
         # self.teksti_vanhapolku.setFont(font)
         self.teksti_vanhapolku.setText("")
         self.teksti_vanhapolku.setReadOnly(True)
         self.teksti_vanhapolku.setObjectName("teksti_vanhapolku")
 
-        self.label_vanhapolku = QtWidgets.QLabel(Puuttuvatsarjat)
-        self.label_vanhapolku.setGeometry(QtCore.QRect(240, 20, 201, 20))
-        self.label_vanhapolku.setObjectName("label_vanhapolku")
         self.label_uusipolku = QtWidgets.QLabel(Puuttuvatsarjat)
-        self.label_uusipolku.setGeometry(QtCore.QRect(240, 100, 201, 20))
+        self.label_uusipolku.setGeometry(QtCore.QRect(self.MARGINAALIT[0]*2+210, 60, 600, 30))
         self.label_uusipolku.setObjectName("label_uusipolku")
 
         self.teksti_uusipolku = QtWidgets.QLineEdit(Puuttuvatsarjat)
-        self.teksti_uusipolku.setGeometry(QtCore.QRect(230, 120, 600, 31))
+        self.teksti_uusipolku.setGeometry(QtCore.QRect(self.MARGINAALIT[0]*2+210, 85, 600, 30))
         # self.teksti_uusipolku.setFont(font)
         self.teksti_uusipolku.setText("")
         self.teksti_uusipolku.setObjectName("teksti_uusipolku")
@@ -55,19 +52,27 @@ class Ui_Puuttuvatsarjat(object):
         self.teksti_uusipolku.setCompleter(completer)
 
         self.Aseta = QtWidgets.QPushButton(Puuttuvatsarjat)
-        self.Aseta.setGeometry(QtCore.QRect(230, 170, 51, 41))
+        self.Aseta.setGeometry(QtCore.QRect(230, 170, 50, 40))
         self.Aseta.setObjectName("Aseta")
         self.Aseta.clicked.connect(self.aseta_uusikansio)
 
         self.Poista = QtWidgets.QPushButton(Puuttuvatsarjat)
-        self.Poista.setGeometry(QtCore.QRect(290, 170, 51, 41))
+        self.Poista.setGeometry(QtCore.QRect(290, 170, 50, 40))
         self.Poista.setObjectName("Poista")
         self.Poista.clicked.connect(self.poistasarja)
 
         self.Kansio = QtWidgets.QPushButton(Puuttuvatsarjat)
-        self.Kansio.setGeometry(QtCore.QRect(400, 170, 51, 41))
+        self.Kansio.setGeometry(QtCore.QRect(350, 170, 50, 40))
         self.Kansio.setObjectName("Kansio")
         self.Kansio.clicked.connect(self.avaa_ehdotuskansio)
+
+        self.buttonBox = QtWidgets.QDialogButtonBox(Puuttuvatsarjat)
+        self.buttonBox.setGeometry(QtCore.QRect(420, 165, 200, 60))
+        self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
+        # self.buttonBox.setLayoutDirection(1)
+        self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
+        # self.buttonBox.setCenterButtons(True)
+        self.buttonBox.setObjectName("buttonBox")
 
         self.retranslateUi(Puuttuvatsarjat)
         self.buttonBox.accepted.connect(Puuttuvatsarjat.accept)
@@ -159,3 +164,23 @@ class Ui_Puuttuvatsarjat(object):
             uusisijainti = self.teksti_uusipolku.text()
             if os.path.exists(uusisijainti):
                 subprocess.run(["dolphin", uusisijainti], stdin=None, stdout=None, stderr=None)
+
+
+if __name__ == "__main__":
+    # tuuraajaluokka jonne dumpata tavaraa
+    class Dummy:
+        def __init__(self):
+            self.poistetutsarjat = []
+            self.SARJAT = []
+            self.muuttuneetindeksit = []
+            self.ehdotukset = []
+
+    app = QtWidgets.QApplication([])
+    tuuraaja = Dummy()
+    Dialog = QtWidgets.QDialog()
+    print(Dialog)
+    ui = Ui_Puuttuvatsarjat()
+    ui.setupUi(Dialog, tuuraaja)
+    ui.sarjannimet()
+    paluuarvo = Dialog.exec()
+    app.exec()

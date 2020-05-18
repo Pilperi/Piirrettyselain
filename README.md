@@ -13,12 +13,15 @@ Varsinainen "ajettava" pääikkuna on `main_piirrettyselain.py`, joka kutsuu tar
 	+ Hakuikkuna jolla voi etsiä sarjoja tietyillä kriteereillä (nimi, jaksomäärä, tyyppi, tietty tyyppi ei ole vielä nähnyt, ...)
 	+ Anilist-API (jottei tarvitse aina manuaalisesti kliksutella ketkä on kattonu sarjan sitten viime käynnistyskerran)
 	+ Automaattinen tarkastus, onko tietokannan sarjat vielä siellä missä pitääkin
+	+ Uusien sarjojen tunnistus (käytännössä sama kuin poistuneiden tunnistus, ajojärjestyksessä oltava sen jälkeen)
 
 **PITÄISI TOTEUTTAA:**
 
-	- Uusien sarjojen tunnistus (käytännössä sama kuin poistuneiden tunnistus, ajojärjestyksessä oltava sen jälkeen)
-
 	- Tagien perusteella hakeminen (kolmitilainen checkbox-lista, "on oltava" vs "ei saa olla" vs "ei väliä")
+
+	- Sarjan kansiosijainnin muokkausmahdollisuus
+
+	- Tietokanta tunnetuille hämäyskansioille (ne mille käyttäjä painaa "tämä ei ole sarja" kun ne löydetään)
 
 
 **TEHTÄVIÄ PIKKUJUTTUJA:**
@@ -28,3 +31,11 @@ Varsinainen "ajettava" pääikkuna on `main_piirrettyselain.py`, joka kutsuu tar
 	+ Hakukriteerien nollaaminen kun hakuikkuna suljetaan
 
 	- Satunnaissarjanappi hakuikkunaan
+
+	- Puuttuvien sarjojen käsittelyssä: tarkasta onko asetettava kansio jo jonkun tunnetun sarjan kohdekansio
+
+	- Puuttuvien sarjojen nappiasettelu kuntoon: meinaan koko ajan painaa "OK"-nappia (joka sulkee ikkunan) kun pitäisi painaa "Aseta"
+
+	- Tietokannan korjausfunktio: tunnista sarjat joille on löydetty MAL-linkki mutta kuvakkeena on edelleen "oletus"
+
+	- Implementoi automaaginen kuvienlataus osaksi tarkistusrumbaa (paremmin)

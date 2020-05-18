@@ -64,8 +64,34 @@ def tarkasta_puuttuvat(sarjalista):
 			print(f"ehdotus:  {ehdokas}")
 	return(indeksit, ehdotukset)
 
-def tarkasta_uudet():
-	pass
+def tarkasta_uudet(tunnetutsarjat):
+	'''
+	Tarkastaa, onko tunnetuihin piirrettykansioihin ilmaantunut kansioita,
+	joita ei ole liitetty mihinkään tietokannan piirrossarjaan
+	('tunnetutsarjat', lista Piirrettyjä)
+	'''
+	uudetkansiot = []
+	for ylakansio in [kvak.KANSIO_AURINKOKALA, kvak.KANSIO_REDRUM, kvak.KANSIO_MICHIRU, kvak.KANSIO_SUZUYA, kvak.KANSIO_NUHMU]:
+		for alikansio in kfun.kansion_sisalto(ylakansio)[1]:
+			# Katsotaan, onko kansiota merkattu mihinkään sarjaan tiedostosijainniksi.
+			# voisi olla "/tiedosto/polku in sarja.tiedostosijainti", mutta joskus on hankalia alikansio_settejä
+			merkattu = False
+			if any([sarja.tiedostosijainti == os.path.join(ylakansio,alikansio) for sarja in tunnetutsarjat]):
+				merkattu = True
+			# Jos kansiota ei ole merkattu mihinkään sarjaan, tarkistetaan vielä onko se sorttia
+			# /kansio/jaksot.mkv vai /kansio/ekakausi/ekanjaksot.mkv + /kansio/tokakausi/tokanjaksot.mkv
+			# Nää on ikäviä ja niistä pitäis päästä eroon, mutta bakabt rajoittaa...
+			if not merkattu:
+				for alialikansio in kfun.kansion_sisalto(os.path.join(ylakansio, alikansio))[1]:
+					if not any([sarja.tiedostosijainti==os.path.join(ylakansio,alikansio,alialikansio) for sarja in tunnetutsarjat]):
+						print("Kansio {} ei ole tietokannassa".format(alikansio))
+						uudetkansiot.append(os.path.join(ylakansio,alikansio,alialikansio))
+						merkattu = True
+				# Jos ei alikansiotarkastelullakaan löytynyt mitään, kansio on tuntematon
+				if not merkattu:
+					print("Kansio {} ei ole tietokannassa".format(alikansio))
+					uudetkansiot.append(os.path.join(ylakansio,alikansio))
+	return(uudetkansiot)
 
 def poista_diktista(dikti, sarja):
 	'''
@@ -80,69 +106,66 @@ def poista_diktista(dikti, sarja):
 				dikti[kansio].pop(d)
 				break
 
+def siisti_nimi(kansionimi):
+	'''
+	Muodostaa siivotun version sarjan nimestä,
+	poistamalla tunnisteet ([OVA], [RAW] ymv)
+	'''
+	teosnimi = kansionimi
+	for tunniste in TUNNISTEET:
+		teosnimi = teosnimi.replace(tunniste, "")
+	i = 0
+	while teosnimi[i].isspace():
+		i += 1
+	j = len(teosnimi)-1
+	while teosnimi[j].isspace():
+		j -= 1
+	return(teosnimi[i:j+1])
+
 def lue_piirretyt():
 	'''
 	Lue piirretyt ennalta määrätyistä kansioista ja arvaa niille arvot
 	'''
 	for kansio in PIIRRETTYDIKTI:
-		if os.path.exists(kansio):
-			alikansiot = kfun.kansion_sisalto(kansio)[1]
-			for teos in alikansiot:
-				piirrossarja = Piirretty()
-				teosnimi = teos
-				for tunniste in TUNNISTEET:
-					teosnimi = teosnimi.replace(tunniste, "")
-				i = 0
-				while teosnimi[i].isspace():
-					i += 1
-				j = len(teosnimi)-1
-				while teosnimi[j].isspace():
-					j -= 1
-				piirrossarja.nimi = teosnimi[i:j+1]
+		alikansiot = kfun.kansion_sisalto(kansio)[1]
+		for teos in alikansiot:
+			piirrossarja = Piirretty()
+			piirrossarja.nimi = siisti_nimi(teos)
 
-				piirrossarja.jaksoja = len([a for a in kfun.kansion_sisalto(os.path.join(kansio, teos))[0] if a.split(".")[-1].lower() in ["mkv", "avi"]])
-				piirrossarja.tiedostosijainti = os.path.join(kansio, teos)
+			piirrossarja.jaksoja = len([a for a in kfun.kansion_sisalto(os.path.join(kansio, teos))[0] if a.split(".")[-1].lower() in ["mkv", "avi"]])
+			piirrossarja.tiedostosijainti = os.path.join(kansio, teos)
 
-				if kansio is kvak.KANSIO_AURINKOKALA:
-					piirrossarja.tagit.append("bakaBT")
-				if kansio is kvak.KANSIO_MICHIRU or kansio is kvak.KANSIO_SUZUYA or kansio is kvak.KANSIO_NUHMU:
-					piirrossarja.katsoneet.append("Pilperi")
+			if kansio is kvak.KANSIO_AURINKOKALA:
+				piirrossarja.tagit.append("bakaBT")
+			if kansio is kvak.KANSIO_MICHIRU or kansio is kvak.KANSIO_SUZUYA or kansio is kvak.KANSIO_NUHMU:
+				piirrossarja.katsoneet.append("Pilperi")
 
-				if "[RAW]" in teos:
-					piirrossarja.tagit.append("RAW")
+			if "[RAW]" in teos:
+				piirrossarja.tagit.append("RAW")
 
-				if "[MOV]" in teos:
-					piirrossarja.tyyppi.append("MOV")
-				if "[OVA]" in teos:
-					piirrossarja.tyyppi.append("OVA")
-				if "[MOV]" not in teos and "OVA" not in teos:
-					piirrossarja.tyyppi.append("TV")
-				if piirrossarja.jaksoja > 0:
-					PIIRRETTYDIKTI[kansio].append(piirrossarja)
-				else:
-					for alikansioteos in kfun.kansion_sisalto(os.path.join(kansio, teos))[1]:
-						piirrossarja = Piirretty()
-						teosnimi = alikansioteos
-						for tunniste in TUNNISTEET:
-							teosnimi = teosnimi.replace(tunniste, "")
-						i = 0
-						while teosnimi[i].isspace():
-							i += 1
-						j = len(teosnimi)-1
-						while teosnimi[j].isspace():
-							j -= 1
-						piirrossarja.nimi = teosnimi[i:j+1]
+			if "[MOV]" in teos:
+				piirrossarja.tyyppi.append("MOV")
+			if "[OVA]" in teos:
+				piirrossarja.tyyppi.append("OVA")
+			if "[MOV]" not in teos and "OVA" not in teos:
+				piirrossarja.tyyppi.append("TV")
+			if piirrossarja.jaksoja > 0:
+				PIIRRETTYDIKTI[kansio].append(piirrossarja)
+			else:
+				for alikansioteos in kfun.kansion_sisalto(os.path.join(kansio, teos))[1]:
+					piirrossarja = Piirretty()
+					
 
-						piirrossarja.jaksoja = len([a for a in kfun.kansion_sisalto(os.path.join(kansio, teos, alikansioteos))[0] if a.split(".")[-1].lower() in ["mkv", "avi"]])
-						piirrossarja.tiedostosijainti = os.path.join(kansio, teos, alikansioteos)
-						piirrossarja.tagit = ["bakaBT"]
-						if "MOV" in teos or "MOV" in alikansioteos:
-							piirrossarja.tyyppi.append("MOV")
-						if "OVA" in teos or "OVA" in alikansioteos:
-							piirrossarja.tyyppi.append("OVA")
-						if "MOV" not in teos and "OVA" not in teos and "MOV" not in alikansioteos and "OVA" not in alikansioteos:
-							piirrossarja.tyyppi.append("TV")
-						PIIRRETTYDIKTI[kansio].append(piirrossarja)	
+					piirrossarja.jaksoja = len([a for a in kfun.kansion_sisalto(os.path.join(kansio, teos, alikansioteos))[0] if a.split(".")[-1].lower() in ["mkv", "avi"]])
+					piirrossarja.tiedostosijainti = os.path.join(kansio, teos, alikansioteos)
+					piirrossarja.tagit = ["bakaBT"]
+					if "MOV" in teos or "MOV" in alikansioteos:
+						piirrossarja.tyyppi.append("MOV")
+					if "OVA" in teos or "OVA" in alikansioteos:
+						piirrossarja.tyyppi.append("OVA")
+					if "MOV" not in teos and "OVA" not in teos and "MOV" not in alikansioteos and "OVA" not in alikansioteos:
+						piirrossarja.tyyppi.append("TV")
+					PIIRRETTYDIKTI[kansio].append(piirrossarja)	
 
 def lue_piirretyt_mal_xml(xml=kvak.MAL_JOUNI):
 	'''
@@ -269,6 +292,7 @@ def lataa_kuvat_urleista(dikti=PIIRRETTYDIKTI):
 		# lataa kuvien rungot (jo löytyvät sarjojen id:t)
 		kuvat = [kfun.paate(a)[0] for a in kfun.kansion_sisalto(kvak.KUVAKANSIO)[0]]
 		for kansio in PIIRRETTYDIKTI:
+			print(kansio)
 			for sarja in PIIRRETTYDIKTI[kansio]:
 				if sarja.kuvake not in kuvat and "?q=" not in sarja.mal:
 					# Jos kuvaa ei vielä löydy, lataa html:stä kiskottavalla urlilla
@@ -288,6 +312,7 @@ def lataa_kuvat_urleista(dikti=PIIRRETTYDIKTI):
 						kuvat.append(sarja.kuvake)
 
 # Tietokantaa ei ole: lue vakiokansiot ja arvaa sarjojen ominaisuudet
+# vähän riski ?
 if not os.path.exists(kvak.TIETOKANTATIEDOSTO):
 	lue_piirretyt()
 	kirjoita_dikti()

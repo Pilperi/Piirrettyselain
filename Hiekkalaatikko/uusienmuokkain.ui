@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Uusienmuokkain</class>
+ <widget class="QWidget" name="Uusienmuokkain">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>758</width>
+    <height>229</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Löytyi uusia sarjoja</string>
+  </property>
+  <widget class="QListWidget" name="Lista_uudet">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>10</y>
+     <width>256</width>
+     <height>201</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="kansiopolku">
+   <property name="geometry">
+    <rect>
+     <x>290</x>
+     <y>10</y>
+     <width>311</width>
+     <height>31</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="Hakutulokset">
+   <property name="geometry">
+    <rect>
+     <x>290</x>
+     <y>130</y>
+     <width>451</width>
+     <height>31</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="MAL_linkki">
+   <property name="geometry">
+    <rect>
+     <x>290</x>
+     <y>50</y>
+     <width>311</width>
+     <height>31</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QDialogButtonBox" name="buttonBox">
+   <property name="geometry">
+    <rect>
+     <x>290</x>
+     <y>180</y>
+     <width>174</width>
+     <height>33</height>
+    </rect>
+   </property>
+   <property name="standardButtons">
+    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="Nappi_kansio">
+   <property name="geometry">
+    <rect>
+     <x>600</x>
+     <y>10</y>
+     <width>141</width>
+     <height>33</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Kansio</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="Nappi_MAL">
+   <property name="geometry">
+    <rect>
+     <x>600</x>
+     <y>50</y>
+     <width>141</width>
+     <height>33</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>MAL</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="MAL_linkki_2">
+   <property name="geometry">
+    <rect>
+     <x>290</x>
+     <y>90</y>
+     <width>311</width>
+     <height>31</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="Nappi_Aseta">
+   <property name="geometry">
+    <rect>
+     <x>600</x>
+     <y>90</y>
+     <width>141</width>
+     <height>33</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Aseta</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton">
+   <property name="geometry">
+    <rect>
+     <x>470</x>
+     <y>180</y>
+     <width>271</width>
+     <height>33</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Tämä ei ole sarja</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

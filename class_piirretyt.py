@@ -56,7 +56,7 @@ class Piirretty:
 		Stringiversio sarjasta, JSON yhteensopiva ja lähinnä tietokantaan dumppaamista varten
 		'''
 		stringi = "\t{\n"
-		stringi += "\t\t\"nimi\":\"{}\",\n".format(self.nimi)
+		stringi += "\t\t\"nimi\":\"{}\",\n".format(self.nimi.replace("\"", "\\\""))
 		stringi += "\t\t\"aliakset\":["
 		aliaksia = len(self.aliakset)-1
 		for i,alias in enumerate(self.aliakset):

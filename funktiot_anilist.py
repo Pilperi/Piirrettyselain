@@ -1,4 +1,5 @@
 import os
+import time
 import json
 import requests
 import class_piirretyt as cp
@@ -40,13 +41,151 @@ def kayttajan_id(kayttajanimi):
 	}
 
 	# Tökitään anilistin API:a
-	response = requests.post(url, json={'query': query, 'variables': variables})
+	response = requests.post(url, json={'query': query, 'variables': variables}, timeout=5)
 	response = response.json()
 	print(response)
 	kayttaja_id = -1
 	if response.get("data"):
 		kayttaja_id = response["data"]["User"]["id"]
 	return(kayttaja_id)
+
+
+def etsi_sarjaa(kansionimi, jaksoja=None, kielletyt=[]):
+	'''
+	Etsii sarjaa kansionnimen ja löydetyn jaksomäärän perusteella,
+	(sarjannimi, MAL-ID, tyyppi, jaksomäärä)-tuplen kerrallaan, kriteerinä että sarjan MAL-ID
+	ei ole annettujen listassa
+	(ts. jos haluaa 10 hakutulosta, pitää funktiota kutsua kymmenen kertaa
+	niin että edellisen kutsun paluu-ID lisätään kiellettyjen listaan)
+	'''
+	lista_sarjoista = []
+	# Etsitään niin että jaksojen määrä on rajattu
+	if jaksoja is not None:
+		query = '''
+		query ($nimi: String, $jaksoja: Int, $kielletyt: [Int]) {
+		  Media (type: ANIME, search: $nimi, episodes_lesser: $jaksoja, idMal_not_in: $kielletyt) {
+			title {romaji}		# Sarjan nimi roomautettuna
+			idMal				# MAL-ID (kiitos Ailist)
+			format				# TV, TV_SHORT, MOVIE, SPECIAL, OVA, ONA, MUSIC
+			episodes			# Jaksomäärä
+		  }
+		}
+		'''
+		variables = {
+			'nimi':			kansionimi,	# siivotussa muodossa, ts. ei [RAW] [OVA] ymv
+			'jaksoja':		jaksoja-1,	# korkeintaan
+			'kielletyt':	kielletyt   # kielletyt ID:t
+		}
+	# Ei rajoiteta jaksomäärän perusteella
+	else:
+		query = '''
+		query ($nimi: String, $kielletyt: [Int]) {
+		  Media (type: ANIME, search: $nimi, idMal_not_in: $kielletyt) {
+			title {romaji}		# Sarjan nimi roomautettuna
+			idMal				# MAL-ID (kiitos Ailist)
+			format				# TV, TV_SHORT, MOVIE, SPECIAL, OVA, ONA, MUSIC
+			episodes			# Jaksomäärä
+		  }
+		}
+		'''
+		variables = {
+			'nimi':			kansionimi,	# siivotussa muodossa, ts. ei [RAW] [OVA] ymv
+			'kielletyt':	kielletyt   # kielletyt ID:t
+		}
+
+	# Make the HTTP Api request
+	response = requests.post(url, json={'query': query, 'variables': variables}, timeout=5)
+	response = response.json()
+	# print(response)
+
+	nimi 			= ""
+	malid			= 0
+	sarjan_tyyppi 	= []
+	jaksot  		= 0
+
+	if response.get("data") and not response.get("errors"):
+		nimi   = response["data"]["Media"]["title"]["romaji"]
+		malid  = response["data"]["Media"]["idMal"]
+		jaksot = response["data"]["Media"]["episodes"]
+		sarjan_tyyppi = response["data"]["Media"]["format"]
+		if sarjan_tyyppi in ["TV", "TV_SHORT", "ONA"]:
+			sarjan_tyyppi = ["TV"]
+		elif sarjan_tyyppi in ["SPECIAL", "MUSIC"]:
+			sarjan_tyyppi = ["SP"]
+		elif sarjan_tyyppi == "MOVIE":
+			sarjan_tyyppi = ["MOV"]
+		else:
+			sarjan_tyyppi = ["OVA"]
+	return((nimi, malid, sarjan_tyyppi, jaksot))
+
+
+def etsi_sarjoja(kansionimi, jaksoja=None, lukumaara=10, isanta=None):
+	'''
+	Etsii lukumaara verran kansionimeä ja jaksomäärää
+	vastaavia sarjoja, kutsumalla etsi_sarjaa() toistuvasti.
+	Jos 'ikkuna', näytä popup-ikkuna
+	'''
+	tulossarjat = []
+	kielletyt = []
+	for i in range(lukumaara):
+		if isanta:
+			isanta.setWindowTitle("Etsitään Anilistista ehdokkaita... {}/{}".format(i, lukumaara))
+		hakutulos = etsi_sarjaa(kansionimi, jaksoja, kielletyt)
+		# Validin hakutuloksen voi tunnistaa vaikka sarjan nimestä,
+		# joka on ei-tyhjä stringi jos jotain löytyi
+		if hakutulos[0]:
+			tulossarjat.append(hakutulos)
+			print(hakutulos)
+			kielletyt.append(hakutulos[1])
+		else:
+			break
+	return(tulossarjat)
+
+def hae_malidilla(ID):
+	'''
+	Hakee sarjan tiedot tämän MAL-ID:llä,
+	paluuarvo etsi_sarjaa()-yhteensopivassa muodossa
+	(sarjannimi, MAL-ID, tyyppi, jaksomäärä)
+	'''
+	nimi 			= ""
+	malid			= 0
+	sarjan_tyyppi 	= []
+	jaksot  		= 0
+
+	if type(ID) == int and ID > 0:
+		query = '''
+		query ($id: Int) {
+		  Media (idMal: $id) {
+			title {romaji}		# Sarjan nimi roomautettuna
+			idMal				# MAL-ID (kiitos Ailist)
+			format				# TV, TV_SHORT, MOVIE, SPECIAL, OVA, ONA, MUSIC
+			episodes			# Jaksomäärä
+		  }
+		}
+		'''
+		variables = {
+			'id': ID
+		}
+
+		# Make the HTTP Api request
+		response = requests.post(url, json={'query': query, 'variables': variables}, timeout=5)
+		response = response.json()
+		# print(response)
+
+		if response.get("data") and not response.get("errors"):
+			nimi   = response["data"]["Media"]["title"]["romaji"]
+			malid  = response["data"]["Media"]["idMal"]
+			jaksot = response["data"]["Media"]["episodes"]
+			sarjan_tyyppi = response["data"]["Media"]["format"]
+			if sarjan_tyyppi in ["TV", "TV_SHORT", "ONA"]:
+				sarjan_tyyppi = ["TV"]
+			elif sarjan_tyyppi in ["SPECIAL", "MUSIC"]:
+				sarjan_tyyppi = ["SP"]
+			elif sarjan_tyyppi == "MOVIE":
+				sarjan_tyyppi = ["MOV"]
+			else:
+				sarjan_tyyppi = ["OVA"]
+	return((nimi, malid, sarjan_tyyppi, jaksot))
 
 
 def kayttajan_completedit(ID):
@@ -74,7 +213,7 @@ def kayttajan_completedit(ID):
 	}
 
 	# Make the HTTP Api request
-	response = requests.post(url, json={'query': query, 'variables': variables})
+	response = requests.post(url, json={'query': query, 'variables': variables}, timeout=5)
 	response = response.json()
 	# print(response)
 	katsottuja = -1
@@ -116,10 +255,12 @@ def muunna_piirroslistaksi(response):
 				# supistetaan sarjan tyyppi, ei olla niin tarkkoja
 				if sarjan_tyyppi in ["TV", "TV_SHORT", "ONA"]:
 					sarjan_tyyppi = ["TV"]
-				if sarjan_tyyppi in ["SPECIAL", "MUSIC"]:
+				elif sarjan_tyyppi in ["SPECIAL", "MUSIC"]:
 					sarjan_tyyppi = ["SP"]
-				if sarjan_tyyppi == "MOVIE":
+				elif sarjan_tyyppi == "MOVIE":
 					sarjan_tyyppi = ["MOV"]
+				else:
+					sarjan_tyyppi = ["OVA"]
 
 				# Kasataan Piirretty-olion pohjustamiseen sopivan mallinen dikti
 				sarjadikti	=	{
@@ -168,12 +309,11 @@ def hae_sarjalista(ID, piirroslistana=True):
 		'id': ID
 	}
 
-	response = requests.post(url, json={'query': query, 'variables': variables})
+	response = requests.post(url, json={'query': query, 'variables': variables}, timeout=5)
 	response = response.json()
 	if piirroslistana:
 		response = muunna_piirroslistaksi(response)
 	return(response)
-
 
 
 def kirjaa_tiedot_anilist(ID, sarjat):
@@ -199,7 +339,7 @@ def kirjaa_tiedot_anilist(ID, sarjat):
 		print(f"ID {ID} ei ole tunnettu käyttäjä-ID")
 
 
-def lue_sarjat_tietokannasta(ID):
+def lue_sarjat_tietokannasta(ID, piirrettyina=False):
 	'''
 	Lukee sarjalistan tietokantatiedostosta.
 	'''
@@ -215,6 +355,8 @@ def lue_sarjat_tietokannasta(ID):
 
 		# Lyödään stringi json-kääntäjään
 		paluuarvo = json.loads(s)
+		if piirrettyina:
+			paluuarvo = [cp.Piirretty(arvo) for arvo in paluuarvo]
 	return(paluuarvo)
 
 
@@ -270,7 +412,7 @@ def paivita_anilist_tietokannat():
 	return(uudetkatsotut)
 
 
-def vertaa_katsoneita(uudetkatsotut, lokaalisarjat):
+def vertaa_katsoneita(uudetkatsotut=None, lokaalisarjat=[]):
 	'''
 	Ottaa paivita_anilist_tietokannat() palauttaman listan uusista katsotuista sarjoista,
 	ja täydentää sen perusteella lokaalin kirjaston sarjojen tietoja,
@@ -279,10 +421,17 @@ def vertaa_katsoneita(uudetkatsotut, lokaalisarjat):
 	muotoon jossa kyseinen tyyppi on sarjan nähnyt
 	'''
 
+	# Tapauksessa None luetaan paikallisesta AL-tietokantatiedostosta
+	if uudetkatsotut is None:
+		uudetkatsotut = {}
+		for kayttaja_id in KATSOJAT_ID:
+			uudetkatsotut[kayttaja_id] = lue_sarjat_tietokannasta(kayttaja_id, piirrettyina=True)
 	muuttunut = False # paluuarvo kertoo kutsujaikkunalle, pitääkö tietokantatiedostot päivittää
 	for katsoja in uudetkatsotut:
 		for anilistsarja in uudetkatsotut[katsoja]:
+			print(anilistsarja)
 			for lokaalisarja in lokaalisarjat:
+				print(lokaalisarja)
 				# Sarjat on samoja jos niillä on sama MAL-id.
 				# Jos katsoja ei ole katsoneiden listalla, lisätään se sinne.
 				if anilistsarja.mal == lokaalisarja.mal and KATSOJAT_NIMI[katsoja] not in lokaalisarja.katsoneet:
@@ -310,3 +459,7 @@ def printtaa_kayttajien_sarjat():
 			sarjalista = hae_sarjalista(kayttaja_id)
 		for sarja in sarjalista:
 			print(sarja)
+
+
+# tulokset = etsi_sarjoja("Koi koi seven", 52, 10)
+# print("Löytyi {} sarjaa".format(len(tulokset)))

@@ -7,6 +7,7 @@ import ikkuna_haku
 import ikkuna_katsoneet
 import ikkuna_puuttuvahaku
 import ikkuna_puuttuvamuokkain
+import ikkuna_uusienmuokkain
 import funktiot_kansiofunktiot as kfun
 import funktiot_anilist as anifun
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -36,8 +37,11 @@ MITAT           = (3*MARGINAALIT[0]+LISTAMITAT[0]+KUVAMITAT[0], 3*MARGINAALIT[1]
 
 class Paaikkuna(object):
     def setupUi(self, MainWindow):
+        self.PIIRRETTYDIKTI = PIIRRETTYDIKTI
         self.SARJAT = SARJAT
-        self.KARTOITIN   = [i for i in range(len(SARJAT))]
+        self.SARJOJA = SARJOJA
+        self.KARTOITIN   = [i for i in range(len(self.SARJAT))]
+        self.KUVAT = KUVAT
 
         # Tarkista puuttuvat sarjat
         self.muuttuneetindeksit = []        # Lista sarjoista (indekseistä) joille on käynyt hassusti
@@ -46,8 +50,8 @@ class Paaikkuna(object):
         # self.indeksit, self.ehdotukset = pfun.tarkasta_puuttuvat(self.SARJAT)
         puuttuvien_tarkistusikkuna = ikkuna_puuttuvahaku.Tarkistuksen_edistyminen(self)
         puuttuvien_tarkistusikkuna.exec()
-
         self.poistetutsarjat = []
+        # Jos jotain on muuttunut eikä käyttäjä peruuttanut hommaa
         if not self.peruutettiin and self.muuttuneetindeksit:
             Dialog = QtWidgets.QDialog()
             ui = ikkuna_puuttuvamuokkain.Ui_Puuttuvatsarjat()
@@ -61,22 +65,63 @@ class Paaikkuna(object):
                     i = len(self.poistetutsarjat)-1
                     while i >= 0:
                         print(self.SARJAT[self.poistetutsarjat[i]].nimi)
-                        pfun.poista_diktista(PIIRRETTYDIKTI, self.SARJAT[self.poistetutsarjat[i]])
+                        pfun.poista_diktista(self.PIIRRETTYDIKTI, self.SARJAT[self.poistetutsarjat[i]])
                         self.SARJAT.pop(self.poistetutsarjat[i])
                         i -= 1
-                pfun.kirjoita_dikti(PIIRRETTYDIKTI, kvak.TIETOKANTATIEDOSTO) # kirjoita päivitys tiedostoon
+                pfun.kirjoita_dikti(self.PIIRRETTYDIKTI, kvak.TIETOKANTATIEDOSTO) # kirjoita päivitys tiedostoon
+                self.SARJOJA = len(self.SARJAT)
+                self.KARTOITIN = [a for a in range(self.SARJOJA)]
             else:
                 print("Peruttu")
 
-        # Katsotaan, onko ihmiset katsonu viime aikoina piirrettyjä.
-        uudetsarjat = anifun.paivita_anilist_tietokannat()
-        if uudetsarjat:
-            muuttunut = anifun.vertaa_katsoneita(uudetsarjat, self.SARJAT)
+        # Katsotaan, onko koneelle ilmaantunut uusia tai "uusia" piirrettyjä
+        self.peruutettiin    = True
+        self.uudetkansiot    = pfun.tarkasta_uudet(self.SARJAT)
+        self.poistetutsarjat = []
+        self.uudetteokset    = []
+        if self.uudetkansiot:
+            uusienmuokkain = ikkuna_uusienmuokkain.Ikkuna_uusienmuokkain(self)
+            uusienmuokkain.exec()
+            # Ei peruutettu ja jotain uutta löytyi:
+            # uudet sarjat Piirrettyinä listassa
+            if not(self.peruutettiin) and self.uudetteokset:
+                for teos in self.uudetteokset:
+                    print(teos.nimi)
+                    self.SARJAT.append(teos)
+                    # Laitetaan diktissä oikeaan kohtaan:
+                    for kansio in self.PIIRRETTYDIKTI:
+                        if kansio in teos.tiedostosijainti:
+                            print(kansio)
+                            self.PIIRRETTYDIKTI[kansio].append(teos)
+                            break
+                # Kirjataan tietokantaan
+                pfun.kirjoita_dikti(self.PIIRRETTYDIKTI, kvak.TIETOKANTATIEDOSTO)
+                # Aakkosjärjestykseen
+                print("Järjestä taas")
+                self.SARJAT = pfun.jarjesta(self.SARJAT)
+                self.SARJOJA = len(self.SARJAT)
+                self.KARTOITIN = [a for a in range(self.SARJOJA)]
+
+        # Katsotaan, onko ihmiset katsonu viime aikoina piirrettyjä,
+        # jos on tai on tullut uusia lokaaleja sarjoja, vertaillaan koneen
+        # piirrettyjä ihmisten katsottujen listoihin
+        uudetkatsotut = anifun.paivita_anilist_tietokannat()
+        if uudetkatsotut:
+            muuttunut = anifun.vertaa_katsoneita(uudetkatsotut, self.SARJAT)
             # Jos joku on katsonut sarjan joka on koneen kovalevyllä, päivitetään tämä
             # tieto sarjan tietoihin
             if muuttunut:
-                pfun.kirjoita_dikti(PIIRRETTYDIKTI, kvak.TIETOKANTATIEDOSTO)
+                pfun.kirjoita_dikti(self.PIIRRETTYDIKTI, kvak.TIETOKANTATIEDOSTO)
+        if self.uudetteokset:
+            muuttunut = anifun.vertaa_katsoneita(lokaalisarjat=self.uudetteokset)
+            # Jos joku on katsonut sarjan joka on koneen kovalevyllä, päivitetään tämä
+            # tieto sarjan tietoihin
+            if muuttunut:
+                pfun.kirjoita_dikti(self.PIIRRETTYDIKTI, kvak.TIETOKANTATIEDOSTO)
         
+        # Lataa sarjojen kuvat
+        pfun.lataa_kuvat_urleista(self.PIIRRETTYDIKTI)
+
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(MITAT[0], MITAT[1])
         MainWindow.setMinimumSize(QtCore.QSize(MITAT[0], MITAT[1]))
@@ -98,6 +143,9 @@ class Paaikkuna(object):
         self.sarjalista.setGeometry(QtCore.QRect(MARGINAALIT[0], MARGINAALIT[1], LISTAMITAT[0], LISTAMITAT[1]))
         self.sarjalista.setObjectName("sarjalista")
         self.sarjalista.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
+        # self.selModel = self.sarjalista.selectionModel()
+        self.sarjalista.selectionModel().selectionChanged.connect(self.nayta_tiedot)
+        # self.sarjalista.clicked.connect(self.nayta_tiedot)
 
         self.taulukko = QtWidgets.QTableWidget(self.centralwidget)
         self.taulukko.setGeometry(QtCore.QRect(MARGINAALIT[0], 2*MARGINAALIT[1]+LISTAMITAT[1], TAULUKKOMITAT[0], TAULUKKOMITAT[1]))
@@ -119,10 +167,6 @@ class Paaikkuna(object):
         self.taulukko.setVerticalHeaderLabels(["Nimi", "Aliakset", "Jaksoja", "Tyyppi", "Tagit", "Katsoneet"])
 
         # self.taulukko.cellDoubleClicked.connect(self.taulukkomuokkaus)
-
-        self.selModel = self.sarjalista.selectionModel()
-        self.sarjalista.selectionModel().selectionChanged.connect(self.nayta_tiedot)
-        # self.sarjalista.clicked.connect(self.nayta_tiedot)
 
         self.kansionappi = QtWidgets.QPushButton(self.centralwidget)
         self.kansionappi.setGeometry(QtCore.QRect(2*MARGINAALIT[0] + LISTAMITAT[0], 2*MARGINAALIT[1]+KUVAMITAT[1], NAPPIMITAT[0], NAPPIMITAT[1]))
@@ -151,16 +195,16 @@ class Paaikkuna(object):
 
     def avaakansio(self):
         valittu = self.sarjalista.currentRow()
-        if valittu != -1 and valittu < SARJOJA and os.path.exists(SARJAT[self.KARTOITIN[valittu]].tiedostosijainti):
-            sarja = SARJAT[self.KARTOITIN[valittu]]
+        if valittu != -1 and valittu < self.SARJOJA and os.path.exists(self.SARJAT[self.KARTOITIN[valittu]].tiedostosijainti):
+            sarja = self.SARJAT[self.KARTOITIN[valittu]]
             print("Valittu sarja: {}\nKansiossa: {}".format(sarja.nimi, sarja.tiedostosijainti))
             subprocess.run(["dolphin", sarja.tiedostosijainti], stdin=None, stdout=None, stderr=None)
 
 
     def avaamal(self):
         valittu = self.sarjalista.currentRow()
-        if valittu != -1 and valittu < SARJOJA:
-            sarja = SARJAT[self.KARTOITIN[valittu]]
+        if valittu != -1 and valittu < self.SARJOJA:
+            sarja = self.SARJAT[self.KARTOITIN[valittu]]
             print(sarja)
             subprocess.run(["firefox", sarja.mal], stdin=None, stdout=None, stderr=None)
 
@@ -179,8 +223,8 @@ class Paaikkuna(object):
 
     def nayta_tiedot(self):
         valittu = self.sarjalista.currentRow()
-        if valittu != -1 and valittu < SARJOJA:
-            sarja = SARJAT[self.KARTOITIN[valittu]]
+        if valittu != -1 and valittu < self.SARJOJA:
+            sarja = self.SARJAT[self.KARTOITIN[valittu]]
             print(sarja)
             print(sarja.nimi)
             print(sarja.mal)
@@ -188,7 +232,8 @@ class Paaikkuna(object):
             print(sarjaid)
             # Etsi sarjaid:tä vastaava kuvatiedosto
             kuvake = OLETUSKUVA
-            for k in KUVAT:
+            self.KUVAT = kfun.kansion_sisalto(KUVAKANSIO)[0]
+            for k in self.KUVAT:
                 # print(kfun.paate(k)[0])
                 if kfun.paate(k)[0] == sarjaid:
                     kuvake = os.path.join(KUVAKANSIO, k)
@@ -240,9 +285,9 @@ class Paaikkuna(object):
     def taulukkomuokkaus(self, rivi, sarake):
         muuttunut = False
         valittu = self.sarjalista.currentRow()
-        if valittu != -1 and valittu < SARJOJA:
+        if valittu != -1 and valittu < self.SARJOJA:
             # print(self.KARTOITIN[valittu])
-            sarja = SARJAT[self.KARTOITIN[valittu]]
+            sarja = self.SARJAT[self.KARTOITIN[valittu]]
 
             # Sarjan nimen muokkaus
             if (rivi, sarake) == (0,0):
@@ -297,8 +342,8 @@ class Paaikkuna(object):
             # Katsoneiden muokkaaminen
             elif (rivi, sarake) == (5,0):
                 valittu = self.sarjalista.currentRow()
-                if valittu != -1 and valittu < SARJOJA:
-                    sarja = SARJAT[self.KARTOITIN[valittu]]
+                if valittu != -1 and valittu < self.SARJOJA:
+                    sarja = self.SARJAT[self.KARTOITIN[valittu]]
                     Dialog = QtWidgets.QDialog()
                     ui = ikkuna_katsoneet.Ui_Dialog()
                     ui.setupUi(Dialog, sarja)
@@ -314,7 +359,7 @@ class Paaikkuna(object):
         if muuttunut:
             self.nayta_tiedot()
             self.sarjannimet([self.SARJAT[a] for a in self.KARTOITIN])
-            pfun.kirjoita_dikti(PIIRRETTYDIKTI, kvak.TIETOKANTATIEDOSTO) # kirjoita päivitys tiedostoon
+            pfun.kirjoita_dikti(self.PIIRRETTYDIKTI, kvak.TIETOKANTATIEDOSTO) # kirjoita päivitys tiedostoon
             self.sarjalista.setCurrentRow(valittu) # palaa sarjalistalla sarjan kohdalle
 
 
