@@ -36,6 +36,20 @@ Varsinainen "ajettava" pääikkuna on `main_piirrettyselain.py`, joka kutsuu tar
 
 	+ Puuttuvien sarjojen nappiasettelu kuntoon: meinaan koko ajan painaa "OK"-nappia (joka sulkee ikkunan) kun pitäisi painaa "Aseta"
 
+	- Puuttuvien sarjojen ikkunassa: "Luotan sinuun"-nappi, joka käyttää kaikki ehdotukset
+
+	- Puuttuvien sarjojen ikkunassa: korvaa dialoginapit norminapeilla, jottei Enter sulje ikkunaa
+
+	- Uusien sarjojen tunnistukseen se ettei laske kansiota jollei siellä ole yhtään videota
+
+	- Uusien sarjojen lisäyksessä: lisää nuppi josta saa säädettyä hakutulosten määrää (hidas)
+
+	- Uusien sarjojen lisäyksessä: "Hae toiset N"-nappi, jolla toiset hakutulokset
+
+	- Uusien sarjojen lisäyksessä: kaikki MAL-sarjat näköjään ei olekaan AL:ssä -> nimi erikseen
+
 	- Tietokannan korjausfunktio: tunnista sarjat joille on löydetty MAL-linkki mutta kuvakkeena on edelleen "oletus"
 
 	- Implementoi automaaginen kuvienlataus osaksi tarkistusrumbaa (paremmin)
+
+	- Tagien lisääminen ja poistaminen, automaaginen tunnistus kansiosta

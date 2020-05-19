@@ -57,6 +57,7 @@ class Ui_Puuttuvatsarjat(object):
 		self.Aseta.setObjectName("Aseta")
 		self.Aseta.clicked.connect(self.aseta_uusikansio)
 		self.Aseta.setStyleSheet("background-color: #4682B4; color: white")
+		self.Aseta.setShortcut("Return")
 
 		self.Poista = QtWidgets.QPushButton(Puuttuvatsarjat)
 		self.Poista.setGeometry(QtCore.QRect(230, 170, 50, 40))
@@ -110,10 +111,16 @@ class Ui_Puuttuvatsarjat(object):
 		'''
 		if self.indeksit:
 			valittu = self.sarjalista.currentRow()
-		if valittu != -1:
-			sarja = self.sarjat[self.indeksit[valittu]]
-			self.teksti_vanhapolku.setText(sarja.tiedostosijainti)
-			self.teksti_uusipolku.setText(self.ehdotukset[valittu])
+			if valittu != -1:
+				sarja = self.sarjat[self.indeksit[valittu]]
+				self.teksti_vanhapolku.setText(sarja.tiedostosijainti)
+				self.teksti_uusipolku.setText(self.ehdotukset[valittu])
+			else:
+				self.teksti_vanhapolku.setText("")
+				self.teksti_uusipolku.setText("")
+		else:
+			self.teksti_vanhapolku.setText("")
+			self.teksti_uusipolku.setText("")
 
 	def tarkistakansio(self):
 		'''

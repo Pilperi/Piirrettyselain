@@ -170,7 +170,7 @@ class Ikkuna_uusienmuokkain(QtWidgets.QDialog):
             # Jos sarjaehdokkaita ei ole vielä etsitty, tee haku nyt
             if not self.sarjahaut[valittu]:
                 self.setWindowTitle("Etsitään Anilistista ehdokkaita...")
-                self.sarjahaut[valittu] = anifun.etsi_sarjoja(self.siivotutnimet[valittu], isanta=self)
+                self.sarjahaut[valittu] = anifun.etsi_sarjoja(self.siivotutnimet[valittu], isanta=self, lukumaara=5)
                 self.setWindowTitle("Löytyi uusia sarjoja")
             # Hakutulokset muodossa
             # (sarjannimi, MAL-ID, tyyppi, jaksomäärä)
