@@ -8,7 +8,8 @@ NULL = kvak.NULL
 
 MITAT = [535, 365] # ikkunan mitat
 
-class Ui_Etsinikkuna(object):
+# class Ui_Etsinikkuna(object):
+class Ui_Etsinikkuna(QtWidgets.QMainWindow):
     def setupUi(self, Etsinikkuna, Isantaikkuna):
     # def setupUi(self, Etsinikkuna):
         # font = QtGui.QFont()
@@ -244,6 +245,7 @@ class Ui_Etsinikkuna(object):
         QtCore.QMetaObject.connectSlotsByName(Etsinikkuna)
 
         self.nimihaku.selectAll()
+        Etsinikkuna.closeEvent = self.closeEvent
 
     def retranslateUi(self, Etsinikkuna):
         _translate = QtCore.QCoreApplication.translate
@@ -380,10 +382,10 @@ class Ui_Etsinikkuna(object):
         # (vähän hölmöä takaisinpoimiskelua mut ihsm)
         hakudikti["katsomatta"] = HAKUKRITEERIT.katsomatta
         HAKUKRITEERIT = cp.Hakuparametrit(hakudikti)
-        # print(HAKUKRITEERIT)
+        print(HAKUKRITEERIT)
 
         # Hae sarjat:
-        hakutulos, indeksit = HAKUKRITEERIT.hae_kriteereilla(piirrettyselain.SARJAT)
+        hakutulos, indeksit = HAKUKRITEERIT.hae_kriteereilla(self.isanta.SARJAT)
         print("Löydettiin {} sarjaa".format(len(indeksit)))
         self.isanta.sarjalista.clearSelection()
         self.isanta.KARTOITIN   = indeksit
@@ -393,9 +395,15 @@ class Ui_Etsinikkuna(object):
             self.isanta.sarjalista.setCurrentRow(0)
         self.isanta.nayta_tiedot()
 
+    def closeEvent(self, event):
+        print("poistutaan")
+        self.nollaa()
+        event.accept()
+
     def nollaa(self):
         '''
         Nollaa hakukriteerit, eli palauttaa listan täydeksi
         '''
-        self.isanta.KARTOITIN   = [i for i in range(len(piirrettyselain.SARJAT))]
-        self.isanta.sarjannimet(piirrettyselain.SARJAT)
+        self.isanta.KARTOITIN   = [i for i in range(len(self.isanta.SARJAT))]
+        self.isanta.sarjannimet(self.isanta.SARJAT)
+        self.isanta.nayta_tiedot()

@@ -12,28 +12,30 @@ Varsinainen "ajettava" pääikkuna on `main_piirrettyselain.py`, joka kutsuu tar
 	+ Sarjan perustietojen muokkaaminen pääikkunan kautta (korjaa nimi, aliaksia, jaksomäärä ymv)
 	+ Hakuikkuna jolla voi etsiä sarjoja tietyillä kriteereillä (nimi, jaksomäärä, tyyppi, tietty tyyppi ei ole vielä nähnyt, ...)
 	+ Anilist-API (jottei tarvitse aina manuaalisesti kliksutella ketkä on kattonu sarjan sitten viime käynnistyskerran)
-
+	+ Automaattinen tarkastus, onko tietokannan sarjat vielä siellä missä pitääkin
+	+ Uusien sarjojen tunnistus (käytännössä sama kuin poistuneiden tunnistus, ajojärjestyksessä oltava sen jälkeen)
 
 **PITÄISI TOTEUTTAA:**
 
-	- Automaattinen tarkastus, onko tietokannan sarjat vielä siellä missä pitääkin
-		TYÖN ALLA
-			+ Käy sarjat läpi ja listaa ne, jotka kadonneet
-			+ Katso, olisiko saman niminen kansio jossain muualla ja ei tietokannassa
-			- Laita käyttäjä päivittämään sarjan sijainti
-				+ Kansiotiedon päivitys
-				+ Kyselyikkunan päivitys
-				+ Signalointi pääikkunan suuntaan
-				- Kansioavausnapin toiminta (avaa ehdotuskansio, ez)
-				- Sarjan poistaminen tietokannasta (kansiota ei ole koska poistettu, poista tietokannasta)
-
-	- Uusien sarjojen tunnistus (käytännössä sama kuin poistuneiden tunnistus, ajojärjestyksessä oltava sen jälkeen)
-
 	- Tagien perusteella hakeminen (kolmitilainen checkbox-lista, "on oltava" vs "ei saa olla" vs "ei väliä")
+
+	- Sarjan kansiosijainnin muokkausmahdollisuus
+
+	- Tietokanta tunnetuille hämäyskansioille (ne mille käyttäjä painaa "tämä ei ole sarja" kun ne löydetään)
 
 
 **TEHTÄVIÄ PIKKUJUTTUJA:**
 
 	+ Vakiojutut `vakiot_piirrettysijainnit.py` -> `vakiot_kansiovakiot.py` ja uudelleennimeäminen funktiokokoelmaksi (yhtenäisyys)
 
-	- Hakukriteerien nollaaminen kun hakuikkuna suljetaan (Ikkunan paluuarvojuttu? Jotenkin muuten?)
+	+ Hakukriteerien nollaaminen kun hakuikkuna suljetaan
+
+	- Satunnaissarjanappi hakuikkunaan
+
+	- Puuttuvien sarjojen käsittelyssä: tarkasta onko asetettava kansio jo jonkun tunnetun sarjan kohdekansio
+
+	- Puuttuvien sarjojen nappiasettelu kuntoon: meinaan koko ajan painaa "OK"-nappia (joka sulkee ikkunan) kun pitäisi painaa "Aseta"
+
+	- Tietokannan korjausfunktio: tunnista sarjat joille on löydetty MAL-linkki mutta kuvakkeena on edelleen "oletus"
+
+	- Implementoi automaaginen kuvienlataus osaksi tarkistusrumbaa (paremmin)
