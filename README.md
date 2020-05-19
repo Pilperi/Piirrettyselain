@@ -32,9 +32,9 @@ Varsinainen "ajettava" pääikkuna on `main_piirrettyselain.py`, joka kutsuu tar
 
 	- Satunnaissarjanappi hakuikkunaan
 
-	- Puuttuvien sarjojen käsittelyssä: tarkasta onko asetettava kansio jo jonkun tunnetun sarjan kohdekansio
+	- Puuttuvien sarjojen käsittelyssä: tarkasta onko asetettava kansio jo jonkun tunnetun sarjan kohdekansio (entä jos on..?)
 
-	- Puuttuvien sarjojen nappiasettelu kuntoon: meinaan koko ajan painaa "OK"-nappia (joka sulkee ikkunan) kun pitäisi painaa "Aseta"
+	+ Puuttuvien sarjojen nappiasettelu kuntoon: meinaan koko ajan painaa "OK"-nappia (joka sulkee ikkunan) kun pitäisi painaa "Aseta"
 
 	- Tietokannan korjausfunktio: tunnista sarjat joille on löydetty MAL-linkki mutta kuvakkeena on edelleen "oletus"
 
