@@ -94,7 +94,12 @@ def etsi_sarjaa(kansionimi, jaksoja=None, kielletyt=[]):
 		}
 
 	# Make the HTTP Api request
-	response = requests.post(url, json={'query': query, 'variables': variables}, timeout=5)
+	try:
+		response = requests.post(url, json={'query': query, 'variables': variables}, timeout=5)
+	except ConnectionError:
+		# Joskus yhteys ei pelaa
+		time.sleep(10)
+		response = requests.post(url, json={'query': query, 'variables': variables}, timeout=5)
 	response = response.json()
 	# print(response)
 
@@ -137,6 +142,7 @@ def etsi_sarjoja(kansionimi, jaksoja=None, lukumaara=10, isanta=None):
 			tulossarjat.append(hakutulos)
 			print(hakutulos)
 			kielletyt.append(hakutulos[1])
+			time.sleep(0.05) # ei kiusata ihan liikaa, 50 ms+ hakujen välissä
 		else:
 			break
 	return(tulossarjat)
