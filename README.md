@@ -21,6 +21,8 @@ Varsinainen "ajettava" pääikkuna on `main_piirrettyselain.py`, joka kutsuu tar
 
 	- Sarjan kansiosijainnin muokkausmahdollisuus
 
+	- Mahdollisuus poistaa sarja tietokannasta
+
 	- Tietokanta tunnetuille hämäyskansioille (ne mille käyttäjä painaa "tämä ei ole sarja" kun ne löydetään)
 
 
@@ -53,3 +55,5 @@ Varsinainen "ajettava" pääikkuna on `main_piirrettyselain.py`, joka kutsuu tar
 	- Implementoi automaaginen kuvienlataus osaksi tarkistusrumbaa (paremmin)
 
 	- Tagien lisääminen ja poistaminen, automaaginen tunnistus kansiosta
+
+	- bakaBT-sarjojen fiksu tunnistaminen (lista bakaBT-sarjoista, saiskohan qbitista jonkun fiksun listan ulos..?)

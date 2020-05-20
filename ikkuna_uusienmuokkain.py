@@ -286,11 +286,21 @@ class Ikkuna_uusienmuokkain(QtWidgets.QDialog):
                                 "jaksoja":          sarjan_jaksot,
                                 "tiedostosijainti": sarjan_kansio,
                                 "mal":              "https://myanimelist.net/anime/{}".format(sarjan_mal),
-                                "kuvake":           sarjan_mal
+                                "kuvake":           sarjan_mal,
+                                "tagit":            []
                                 }
             # Jos kansiossa oleva nimi on eri kuin AL-nimi, lisätään aliaksiin
             if self.siivotutnimet[valittu] != sarjan_nimi:
                 sarjatietodikti["aliakset"] = [self.siivotutnimet[valittu]]
+
+            # Jos sarjan kansionimessä [RAW], lisää tageihin RAW
+            if "[RAW]" in sarjan_kansio:
+                sarjatietodikti["tagit"].append("RAW")
+            # Jos sarja sijaitsee Aurinkokalalla, se on mitä todennäköisimmin bakaBT-sarja
+            # (implementoidaan parempi tarkastusmenettely myöhemmin)
+            if "/Aurinkokala/" in sarjan_kansio:
+                sarjatietodikti["tagit"].append("bakaBT")
+
             piirrossarja = cp.Piirretty(sarjatietodikti)
             print(piirrossarja)
             self.maaritetyt.append(piirrossarja)

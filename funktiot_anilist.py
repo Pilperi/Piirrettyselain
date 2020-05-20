@@ -383,11 +383,12 @@ def paivita_anilist_tietokannat():
 				# Haetaan anilist-data
 				if not sarjalista:
 					sarjalista = hae_sarjalista(kayttaja_id)
-				lokaalilista = lue_sarjat_tietokannasta(kayttaja_id)
+				lokaalilista = lue_sarjat_tietokannasta(kayttaja_id, piirrettyina=True)
 
 				# Sarjat oliomuodossa ja molemmat luettu anilistista, joten voidaan verrata vaikka mal-id:n perusteella
 				# (nämä harvemmin muuttuvat sarjoissa jotka on jo tullu loppuun)
 				for sarja in sarjalista:
+					print(sarja)
 					pari_on = False
 					for lokaalisarja in lokaalilista:
 						if sarja.mal == lokaalisarja.mal:
