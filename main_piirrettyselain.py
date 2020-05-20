@@ -198,7 +198,8 @@ class Paaikkuna(object):
         if valittu != -1 and valittu < self.SARJOJA and os.path.exists(self.SARJAT[self.KARTOITIN[valittu]].tiedostosijainti):
             sarja = self.SARJAT[self.KARTOITIN[valittu]]
             print("Valittu sarja: {}\nKansiossa: {}".format(sarja.nimi, sarja.tiedostosijainti))
-            subprocess.run(["dolphin", sarja.tiedostosijainti], stdin=None, stdout=None, stderr=None)
+            # subprocess.run(["dolphin", sarja.tiedostosijainti], stdin=None, stdout=None, stderr=None)
+            subprocess.Popen(["dolphin", sarja.tiedostosijainti], stdin=None, stdout=None, stderr=None)
 
 
     def avaamal(self):
@@ -206,7 +207,8 @@ class Paaikkuna(object):
         if valittu != -1 and valittu < self.SARJOJA:
             sarja = self.SARJAT[self.KARTOITIN[valittu]]
             print(sarja)
-            subprocess.run(["firefox", sarja.mal], stdin=None, stdout=None, stderr=None)
+            # subprocess.run(["firefox", sarja.mal], stdin=None, stdout=None, stderr=None)
+            subprocess.Popen(["firefox", sarja.mal], stdin=None, stdout=None, stderr=None)
 
 
     def sarjannimet(self, lista):

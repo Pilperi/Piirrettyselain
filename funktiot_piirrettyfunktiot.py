@@ -83,14 +83,12 @@ def tarkasta_uudet(tunnetutsarjat):
 			# Nää on ikäviä ja niistä pitäis päästä eroon, mutta bakabt rajoittaa...
 			if not merkattu:
 				for alialikansio in kfun.kansion_sisalto(os.path.join(ylakansio, alikansio))[1]:
-					if not any([sarja.tiedostosijainti==os.path.join(ylakansio,alikansio,alialikansio) for sarja in tunnetutsarjat]):
-						print("Kansio {} ei ole tietokannassa".format(alikansio))
-						uudetkansiot.append(os.path.join(ylakansio,alikansio,alialikansio))
+					if any([sarja.tiedostosijainti==os.path.join(ylakansio,alikansio,alialikansio) for sarja in tunnetutsarjat]):
 						merkattu = True
-				# Jos ei alikansiotarkastelullakaan löytynyt mitään, kansio on tuntematon
-				if not merkattu:
-					print("Kansio {} ei ole tietokannassa".format(alikansio))
-					uudetkansiot.append(os.path.join(ylakansio,alikansio))
+			# Jos ei alikansiotarkastelullakaan löytynyt mitään, kansio on tuntematon
+			if not merkattu:
+				print("Kansio {} ei ole tietokannassa".format(os.path.join(ylakansio, alikansio)))
+				uudetkansiot.append(os.path.join(ylakansio, alikansio))
 	return(uudetkansiot)
 
 def poista_diktista(dikti, sarja):

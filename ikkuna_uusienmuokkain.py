@@ -30,6 +30,7 @@ class Ikkuna_uusienmuokkain(QtWidgets.QDialog):
                         # "/mnt/Suzuya/Suzuyajako/Anime/Aikatsu! [RAW]"]
         # self.uudetsarjat = testikansiot
         self.uudetsarjat = Isantaikkuna.uudetkansiot
+        print(self.uudetsarjat)
         self.maaritetyt = []
 
         self.Lista_uudet = QtWidgets.QListWidget(self)
