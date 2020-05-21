@@ -21,6 +21,7 @@ if LOKAALI_KONE == "Murakumo" and linux_murakumo:
 	KANSIO_AURINKOKALA	= "/mnt/Olkkari/Aurinkokala/Animea/"
 	KANSIO_REDRUM		= "/mnt/Olkkari/redrum/Anime/"
 	KANSIO_MICHIRU		= "/mnt/Olkkari/Michiru/Anime/"
+	KANSIO_MINT			= "/mnt/Olkkari/Mint/Anime/"
 	KANSIO_SUZUYA		= "/mnt/Suzuya/Suzuyajako/Anime/"
 	KANSIO_NUHMU		= "/mnt/Nuhmu/Nuhmujako/Anime/"
 
@@ -81,6 +82,7 @@ elif LOKAALI_KONE == "Olkkari":
 	KANSIO_AURINKOKALA	= "/mnt/Aurinkokala/Animea/"
 	KANSIO_REDRUM		= "/mnt/redrum/Anime/"
 	KANSIO_MICHIRU		= "/mnt/Michiru/Anime/"
+	KANSIO_MINT			= "/mnt/Mint/Anime/"
 	KANSIO_SUZUYA		= "/mnt/Murakumo/Suzuyajako/Anime/"
 	KANSIO_NUHMU		= "/mnt/Murakumo/Nuhmujako/Anime/"
 
