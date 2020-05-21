@@ -34,18 +34,22 @@ Varsinainen "ajettava" pääikkuna on `main_piirrettyselain.py`, joka kutsuu tar
 
 **TEHTÄVIÄ PIKKUJUTTUJA:**
 
-	- Satunnaissarjanappi hakuikkunaan
-
 	- Puuttuvien sarjojen käsittelyssä:
 		- tarkasta onko asetettava kansio jo jonkun tunnetun sarjan kohdekansio (entä jos on..?)
 		- Ikkunassa: korvaa dialoginapit norminapeilla, jottei Enter sulje ikkunaa
 		- Ikkunassa: "Luotan sinuun"-nappi, joka käyttää kaikki ehdotukset
+
 	- Uusien sarjojen käsittelyssä:
 		- Lisää nuppi josta saa säädettyä hakutulosten määrää koska hidas (tai ihan vain: hae seuraavat N sarjaa ja aloita yhdellä)
 		- Älä laske kansiota uudeksi piirretyksi jollei siellä ole yhtään videota (harvemmin käy, tosin)
 		- Kaikki MAL-sarjat näköjään ei olekaan AL:ssä -> nimi haettava erikseen
+
 	- Pääikkunassa:
-		- Tagien lisääminen ja poistaminen, automaaginen tunnistus kansiosta		
+		- Tagien lisääminen ja poistaminen, automaaginen tunnistus kansiosta
+
+	- Hakuikkunassa:
+		- Satunnaissarjanappi
+
 	- Yleisiä/sekalaisia:
 		- Tietokannan korjausfunktio: tunnista sarjat joille on löydetty MAL-linkki mutta kuvakkeena on edelleen "oletus"
 		- bakaBT-sarjojen fiksu tunnistaminen (lista bakaBT-sarjoista, saiskohan qbitista jonkun fiksun listan ulos..?)
