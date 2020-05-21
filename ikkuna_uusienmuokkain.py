@@ -232,7 +232,7 @@ class Ikkuna_uusienmuokkain(QtWidgets.QDialog):
         mikä ihmeen sarja on kyseessä
         '''
         if self.kansiopolku.text():
-            subprocess.run(["dolphin", self.kansiopolku.text()], stdin=None, stdout=None, stderr=None)
+            subprocess.Popen(["dolphin", self.kansiopolku.text()], stdin=None, stdout=None, stderr=None)
 
     def avamal(self):
         '''
@@ -240,7 +240,7 @@ class Ikkuna_uusienmuokkain(QtWidgets.QDialog):
         näyttääkö se siltä mikä oli mielessä (läh. promokuva)
         '''
         if self.MAL_linkki.text():
-            subprocess.run(["firefox", self.MAL_linkki.text()], stdin=None, stdout=None, stderr=None)
+            subprocess.Popen(["firefox", self.MAL_linkki.text()], stdin=None, stdout=None, stderr=None)
 
     def tamaeiolesarja(self):
         '''

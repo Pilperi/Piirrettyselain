@@ -18,42 +18,24 @@ Varsinainen "ajettava" pääikkuna on `main_piirrettyselain.py`, joka kutsuu tar
 **PITÄISI TOTEUTTAA:**
 
 	- Tagien perusteella hakeminen (kolmitilainen checkbox-lista, "on oltava" vs "ei saa olla" vs "ei väliä")
-
 	- Sarjan kansiosijainnin muokkausmahdollisuus
-
 	- Mahdollisuus poistaa sarja tietokannasta
-
 	- Tietokanta tunnetuille hämäyskansioille (ne mille käyttäjä painaa "tämä ei ole sarja" kun ne löydetään)
-
+**TEHTYJÄ PIKKUJUTTUJA:**
+	+ Puuttuvien sarjojen nappiasettelu kuntoon: meinaan koko ajan painaa "OK"-nappia (joka sulkee ikkunan) kun pitäisi painaa "Aseta"
+	+ Vakiojutut `vakiot_piirrettysijainnit.py` -> `vakiot_kansiovakiot.py` ja uudelleennimeäminen funktiokokoelmaksi (yhtenäisyys)
+	+ Hakukriteerien nollaaminen kun hakuikkuna suljetaan
+	+ Implementoi automaaginen kuvienlataus osaksi tarkistusrumbaa (paremmin)
 
 **TEHTÄVIÄ PIKKUJUTTUJA:**
-
-	+ Vakiojutut `vakiot_piirrettysijainnit.py` -> `vakiot_kansiovakiot.py` ja uudelleennimeäminen funktiokokoelmaksi (yhtenäisyys)
-
-	+ Hakukriteerien nollaaminen kun hakuikkuna suljetaan
-
 	- Satunnaissarjanappi hakuikkunaan
-
 	- Puuttuvien sarjojen käsittelyssä: tarkasta onko asetettava kansio jo jonkun tunnetun sarjan kohdekansio (entä jos on..?)
-
-	+ Puuttuvien sarjojen nappiasettelu kuntoon: meinaan koko ajan painaa "OK"-nappia (joka sulkee ikkunan) kun pitäisi painaa "Aseta"
-
 	- Puuttuvien sarjojen ikkunassa: "Luotan sinuun"-nappi, joka käyttää kaikki ehdotukset
-
 	- Puuttuvien sarjojen ikkunassa: korvaa dialoginapit norminapeilla, jottei Enter sulje ikkunaa
-
 	- Uusien sarjojen tunnistukseen se ettei laske kansiota jollei siellä ole yhtään videota
-
 	- Uusien sarjojen lisäyksessä: lisää nuppi josta saa säädettyä hakutulosten määrää (hidas)
-
 	- Uusien sarjojen lisäyksessä: "Hae toiset N"-nappi, jolla toiset hakutulokset
-
 	- Uusien sarjojen lisäyksessä: kaikki MAL-sarjat näköjään ei olekaan AL:ssä -> nimi erikseen
-
 	- Tietokannan korjausfunktio: tunnista sarjat joille on löydetty MAL-linkki mutta kuvakkeena on edelleen "oletus"
-
-	- Implementoi automaaginen kuvienlataus osaksi tarkistusrumbaa (paremmin)
-
 	- Tagien lisääminen ja poistaminen, automaaginen tunnistus kansiosta
-
 	- bakaBT-sarjojen fiksu tunnistaminen (lista bakaBT-sarjoista, saiskohan qbitista jonkun fiksun listan ulos..?)

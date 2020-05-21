@@ -289,25 +289,28 @@ def lataa_kuvat_urleista(dikti=PIIRRETTYDIKTI):
 	if os.path.exists(kvak.KUVAKANSIO):
 		# lataa kuvien rungot (jo löytyvät sarjojen id:t)
 		kuvat = [kfun.paate(a)[0] for a in kfun.kansion_sisalto(kvak.KUVAKANSIO)[0]]
-		for kansio in PIIRRETTYDIKTI:
-			print(kansio)
-			for sarja in PIIRRETTYDIKTI[kansio]:
-				if sarja.kuvake not in kuvat and "?q=" not in sarja.mal:
-					# Jos kuvaa ei vielä löydy, lataa html:stä kiskottavalla urlilla
-					print(sarja.nimi)
-					print(sarja.mal)
-					fp = urllib.request.urlopen(sarja.mal)
-					htmltavut = fp.read()
-					htmlstring = htmltavut.decode("utf8")
-					# Sarjakuvat html:ssä lainausmerkeissä ja samalla etuliitteellä
-					kuvaurl = htmlstring.split("https://cdn.myanimelist.net/images/anime/")[1].split("\"")[0]
-					kuvaurl = "https://cdn.myanimelist.net/images/anime/{}".format(kuvaurl)
-					paate = kfun.paate(kuvaurl)[1]
-					print(kuvaurl)
-					# tallenna kuva (jos pääte vaikuttaa järkevältä, pisin varmaan jpeg)
-					if paate and len(paate) < 5:
-						urllib.request.urlretrieve(kuvaurl, "{}{}.{}".format(kvak.KUVAKANSIO, sarja.kuvake, paate))
-						kuvat.append(sarja.kuvake)
+		try:
+			for kansio in PIIRRETTYDIKTI:
+				print(kansio)
+				for sarja in PIIRRETTYDIKTI[kansio]:
+					if sarja.kuvake not in kuvat and "?q=" not in sarja.mal:
+						# Jos kuvaa ei vielä löydy, lataa html:stä kiskottavalla urlilla
+						print(sarja.nimi)
+						print(sarja.mal)
+						fp = urllib.request.urlopen(sarja.mal)
+						htmltavut = fp.read()
+						htmlstring = htmltavut.decode("utf8")
+						# Sarjakuvat html:ssä lainausmerkeissä ja samalla etuliitteellä
+						kuvaurl = htmlstring.split("https://cdn.myanimelist.net/images/anime/")[1].split("\"")[0]
+						kuvaurl = "https://cdn.myanimelist.net/images/anime/{}".format(kuvaurl)
+						paate = kfun.paate(kuvaurl)[1]
+						print(kuvaurl)
+						# tallenna kuva (jos pääte vaikuttaa järkevältä, pisin varmaan jpeg)
+						if paate and len(paate) < 5:
+							urllib.request.urlretrieve(kuvaurl, "{}{}.{}".format(kvak.KUVAKANSIO, sarja.kuvake, paate))
+							kuvat.append(sarja.kuvake)
+		except urllib.request.HTTPError as err:
+			print("MAL nurin, ei saada kuvaa ladattua\n({})".format(err))
 
 # Tietokantaa ei ole: lue vakiokansiot ja arvaa sarjojen ominaisuudet
 # vähän riski ?
