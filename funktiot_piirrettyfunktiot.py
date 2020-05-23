@@ -13,7 +13,8 @@ PIIRRETTYDIKTI =	{
 					kvak.KANSIO_REDRUM:			[],
 					kvak.KANSIO_MICHIRU:		[],
 					kvak.KANSIO_SUZUYA:			[],
-					kvak.KANSIO_NUHMU:			[]
+					kvak.KANSIO_NUHMU:			[],
+					kvak.KANSIO_MINT:			[]
 					}
 
 MANUAALIDIKTI		= {}
