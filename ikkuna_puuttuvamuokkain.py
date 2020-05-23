@@ -147,6 +147,7 @@ class Ui_Puuttuvatsarjat(object):
 				uusisijainti = uusisijainti[:-1]
 			sarja.tiedostosijainti = uusisijainti
 			# sarja.tiedostosijainti = self.ehdotukset[valittu]
+			self.sarjalista.clear()
 			self.indeksit.pop(valittu)
 			self.ehdotukset.pop(valittu)
 			self.sarjannimet()
