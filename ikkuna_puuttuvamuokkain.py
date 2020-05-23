@@ -161,6 +161,7 @@ class Ui_Puuttuvatsarjat(object):
 		valittu = self.sarjalista.currentRow()
 		if self.indeksit and valittu != -1:
 			self.Paaikkuna.poistetutsarjat.append(self.indeksit[valittu])
+			self.sarjalista.clear()
 			self.indeksit.pop(valittu)
 			self.ehdotukset.pop(valittu)
 			self.sarjannimet()
