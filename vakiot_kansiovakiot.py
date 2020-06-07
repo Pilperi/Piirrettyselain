@@ -23,7 +23,7 @@ if LOKAALI_KONE == "Murakumo" and linux_murakumo:
 	KANSIO_MICHIRU		= "/mnt/Olkkari/Michiru/Anime/"
 	KANSIO_MINT			= "/mnt/Olkkari/Mint/Anime/"
 	KANSIO_SUZUYA		= "/mnt/Suzuya/Suzuyajako/Anime/"
-	KANSIO_NUHMU		= "/mnt/Nuhmu/Nuhmujako/Anime/"
+	KANSIO_NUHMU		= "/mnt/Nuhmu/Anime/"
 
 	# Lokaalien sarjojen tietokanta
 	TIETOKANTATIEDOSTO	= "/home/pilperi/Tietokannat/Piirretyt/piirrossarjat.json"
