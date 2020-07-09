@@ -381,7 +381,10 @@ def paivita_anilist_tietokannat():
 			f = open(kvak.ANILIST[kayttaja_id], "r")
 			tietokantasarjoja = int(f.readline())
 			f.close()
-			completedeja, sarjalista = kayttajan_completedit(kayttaja_id)
+			# completedeja, sarjalista = kayttajan_completedit(kayttaja_id)
+			sarjalista   = hae_sarjalista(kayttaja_id) # AL katsottujenmäärässä jotain hassua
+			completedeja = len(sarjalista)
+
 
 			# Jos luvut eivät täsmää, päivitetään
 			if completedeja > tietokantasarjoja:
